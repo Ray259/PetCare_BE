@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @default(uuid()) @id
+  email String @unique
+  username String
+  password String
+  phone String
+  role Role @default(user)
+  avatar String?
+  gender String?
+  pet Pet[]
+  refreshToken String?
+}
+
+enum Role {
+  user
+  admin
+}
+
+model Pet {
+  id String @default(uuid()) @id
+  name String
+  age Int
+  color String
+  gender String
+  breed String
+  avatar String
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id])
+  healthcareServices HealthcareService[]
+  groomingServices GroomingService[]
+  boardingServices BoardingService[]
+  appointments Appointments[]
+}
+
+model HealthcareService {
+  id String @default(uuid()) @id
+  petId String
+  description String  @db.Text
+  diet String  @db.Text
+  date DateTime
+  medicine String
+  pet Pet @relation(fields: [petId], references: [id])
+  medicineId Medicine @relation(fields: [medicine], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model GroomingService {
+  id String @default(uuid()) @id
+  petId String
+  date DateTime
+  additionalInfo Json?
+  pet Pet @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model BoardingService {
+  id String @default(uuid()) @id
+  petId String
+  cage Int
+  address String
+  date DateTime
+  pet Pet @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Appointments {
+  id String @default(uuid()) @id
+  petId String
+  description String  @db.Text
+  status String
+  followUp Boolean @default(false)
+  date DateTime
+  additionalInfo Json?
+  pet Pet @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Medicine {
+  id String @default(uuid()) @id
+  name String
+  description String  @db.Text
+  healthcare HealthcareService[]
+}
