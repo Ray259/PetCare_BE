@@ -5,38 +5,35 @@ import {
   Get,
   UseGuards,
   Request,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Prisma } from '@prisma/client';
-import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './Guard/jwt-auth.guard';
 import { Tokens } from '../common/decorator/tokens.decorator';
+import { Response } from 'express';
+import { GoogleOauthGuard } from './Guard/google-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   create(@Body() dto: Prisma.UserCreateInput) {
-    return this.usersService.create(dto);
+    return this.authService.register(dto);
   }
 
   @Post('login')
-  login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
-  }
-
-  @UseGuards(AuthGuard)
-  @Tokens('access')
-  @Get('logout')
-  logout(@Request() req) {
-    const user = req.user;
-    console.log('user', user.id);
-    return this.authService.logout(user.id);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const payload = await this.authService.login(dto);
+    // console.log(payload);
+    res.cookie('access token', JSON.stringify(payload.access_token));
+    res.cookie('refresh token', JSON.stringify(payload.refresh_token));
+    return payload;
   }
 
   @UseGuards(AuthGuard)
@@ -44,7 +41,25 @@ export class AuthController {
   @Get('refresh')
   refreshToken(@Request() req) {
     const user = req.user;
-    console.log(user);
+    // console.log(user);
     return this.authService.refresh(user.id, user.refreshToken);
+  }
+
+  @UseGuards(AuthGuard)
+  @Tokens('refresh')
+  @Get('logout')
+  logout(@Request() req) {
+    const user = req.user;
+    return this.authService.logout(user.id);
+  }
+
+  @Get('google')
+  @UseGuards(GoogleOauthGuard)
+  googleAuth() {}
+
+  @Get('google/callback')
+  @UseGuards(GoogleOauthGuard)
+  googleAuthRedirect(@Request() req) {
+    return this.authService.googleLogin(req);
   }
 }

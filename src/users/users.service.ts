@@ -8,6 +8,8 @@ export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(dto: Prisma.UserCreateInput) {
+    const u = await this.findByEmail(dto.email);
+    if (u) return 'This email has already been registered';
     const hash = await bcrypt.hash(dto.password, 10);
     dto.password = hash;
     return this.databaseService.user.create({ data: dto });
@@ -32,5 +34,9 @@ export class UsersService {
 
   remove(id: string) {
     return this.databaseService.user.delete({ where: { id } });
+  }
+
+  findByEmail(email: string) {
+    return this.databaseService.user.findUnique({ where: { email } });
   }
 }

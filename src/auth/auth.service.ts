@@ -8,13 +8,20 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Tokens } from './types/token.type';
 import * as bcrypt from 'bcrypt';
+import { UsersService } from 'src/users/users.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
   ) {}
+
+  async register(dto: Prisma.UserCreateInput) {
+    return this.usersService.create(dto);
+  }
 
   async login(dto: LoginDto): Promise<Tokens> {
     const user = await this.databaseService.user.findUnique({
@@ -24,9 +31,21 @@ export class AuthService {
     if (!this.comparePassword(dto.password, user.password)) {
       throw new UnauthorizedException('Password is incorrect');
     }
-    const tokens = this.createTokens(user.id, user.email);
-    await this.storeRefreshToken(user.id, (await tokens).refresh_token);
+    const tokens = await this.createTokens(user.id, user.email);
+    await this.storeRefreshToken(user.id, tokens.refresh_token);
     return tokens;
+  }
+
+  async googleLogin(req): Promise<Tokens> {
+    await this.register({
+      id: req.user.id,
+      email: req.user.email,
+      username: req.user.name,
+      avatar: req.user.avatar,
+      password: '',
+      phone: '',
+    });
+    return this.createTokens(req.id, req.email);
   }
 
   async logout(id: string) {
