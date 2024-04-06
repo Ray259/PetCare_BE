@@ -11,12 +11,18 @@ import { UsersService } from './users.service';
 import { Prisma } from '@prisma/client';
 import { Tokens } from 'src/common/decorator/tokens.decorator';
 import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
+import { Roles } from 'src/common/decorator/roles.decorator';
+import { RolesGuard } from 'src/auth/Guard/roles.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('get-all')
+  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
+  @Tokens('access')
+  @Roles(['admin'])
   findAll() {
     return this.usersService.findAll();
   }

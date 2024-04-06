@@ -31,7 +31,7 @@ export class AuthService {
     if (!this.comparePassword(dto.password, user.password)) {
       throw new UnauthorizedException('Password is incorrect');
     }
-    const tokens = await this.createTokens(user.id, user.email);
+    const tokens = await this.createTokens(user.id, user.email, user.role);
     await this.storeRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -68,7 +68,7 @@ export class AuthService {
     });
     if (!user) throw new ForbiddenException();
     if (!bcrypt.compare(rt, user.refreshToken)) throw new ForbiddenException();
-    const tokens = await this.createTokens(user.id, user.email);
+    const tokens = await this.createTokens(user.id, user.email, user.role);
     await this.storeRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -86,10 +86,15 @@ export class AuthService {
     });
   }
 
-  async createTokens(id: string, email: string): Promise<Tokens> {
+  async createTokens(
+    id: string,
+    email: string,
+    role?: string,
+  ): Promise<Tokens> {
+    if (!role) role = 'user';
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
-        { email, id },
+        { email, id, role },
         {
           secret: process.env.JWT_ACCESS_SECRET || 'at-secret',
           expiresIn: 60 * 15,
