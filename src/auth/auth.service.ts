@@ -97,14 +97,14 @@ export class AuthService {
         { email, id, role },
         {
           secret: process.env.JWT_ACCESS_SECRET || 'at-secret',
-          expiresIn: 60 * 15,
+          expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
         },
       ),
       this.jwtService.signAsync(
         { id },
         {
           secret: process.env.JWT_REFRESH_SECRET || 'rt-secret',
-          expiresIn: 60 * 60 * 24 * 7,
+          expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
         },
       ),
     ]);

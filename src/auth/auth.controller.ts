@@ -31,8 +31,8 @@ export class AuthController {
   ) {
     const payload = await this.authService.login(dto);
     // console.log(payload);
-    res.cookie('access token', JSON.stringify(payload.access_token));
-    res.cookie('refresh token', JSON.stringify(payload.refresh_token));
+    res.cookie('access_token', JSON.stringify(payload.access_token));
+    res.cookie('refresh_token', JSON.stringify(payload.refresh_token));
     return payload;
   }
 

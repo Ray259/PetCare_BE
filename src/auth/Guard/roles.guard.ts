@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Roles } from 'src/common/decorator/roles.decorator';
-import { extractHeaderTokens } from './utils/extractHeaderTokens.util';
+import { extractHeaderTokens } from 'src/utils/auth/extractHeaderTokens.util';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

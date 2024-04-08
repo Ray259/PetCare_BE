@@ -1,7 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
-import { GGProfile } from '../types/ggprofile.type';
+import { GGProfile } from 'src/auth/types/ggprofile.type';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -9,7 +9,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:8080/api/auth/google/callback',
+      callbackURL: `${process.env.API_URL}/${process.env.API_VERSION}/auth/google/callback`,
       scope: ['email', 'profile'],
     });
   }
