@@ -50,7 +50,7 @@ export class AuthController {
   @Get('logout')
   logout(@Request() req) {
     const user = req.user;
-    return this.authService.logout(user.id);
+    return this.authService.logout(user.id, user.refreshToken);
   }
 
   @Get('google')

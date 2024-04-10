@@ -24,7 +24,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const user: GGProfile = {
       id: id,
       email: emails[0].value,
-      name: displayName,
+      username: displayName,
       avatar: photos[0].value,
     };
     // console.log(user);

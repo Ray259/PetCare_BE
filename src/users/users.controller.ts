@@ -3,7 +3,7 @@ import {
   Get,
   Body,
   Patch,
-  Param,
+  Request,
   Delete,
   UseGuards,
 } from '@nestjs/common';
@@ -29,18 +29,27 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Tokens('access')
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  @Get()
+  findById(@Request() req) {
+    const id = req.user.id;
+    return this.usersService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: Prisma.UserUpdateInput) {
+  @Patch()
+  @UseGuards(AuthGuard)
+  @Tokens('access')
+  update(@Request() req, @Body() dto: Prisma.UserUpdateInput) {
+    const id = req.user.id;
     return this.usersService.update(id, dto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete()
+  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
+  @Tokens('access')
+  @Roles(['admin'])
+  remove(@Request() req) {
+    const id = req.params.id;
     return this.usersService.remove(id);
   }
 }

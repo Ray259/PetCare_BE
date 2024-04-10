@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
       });
       //   console.log('payload', payload);
       request['user'] = payload;
-      request['user'].refreshToken = token;
+      if (t === 'refresh') request['user'].refreshToken = token;
     } catch {
       throw new UnauthorizedException();
     }

@@ -17,13 +17,13 @@ model User {
   id String @default(uuid()) @id
   email String @unique
   username String
-  password String
-  phone String
+  password String?
+  phone String?
   role Role @default(user)
   avatar String?
   gender String?
   pet Pet[]
-  refreshToken String?
+  refreshToken String[]
 }
 
 enum Role {
@@ -54,6 +54,7 @@ model HealthcareService {
   diet String  @db.Text
   date DateTime
   medicine String
+  additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id])
   medicineId Medicine @relation(fields: [medicine], references: [id])
   createdAt DateTime @default(now())
@@ -76,6 +77,7 @@ model BoardingService {
   cage Int
   address String
   date DateTime
+  additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

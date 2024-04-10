@@ -1,6 +1,6 @@
 export type GGProfile = {
   id: string;
   email: string;
-  name: string;
+  username: string;
   avatar: string;
 };

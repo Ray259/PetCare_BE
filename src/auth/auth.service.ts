@@ -10,6 +10,7 @@ import { Tokens } from './types/token.type';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { Prisma } from '@prisma/client';
+import { GGProfile } from './types/ggprofile.type';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,18 @@ export class AuthService {
 
   async register(dto: Prisma.UserCreateInput) {
     return this.usersService.create(dto);
+  }
+
+  async registerByGoogle(dto: GGProfile) {
+    return this.databaseService.user.create({
+      data: {
+        email: dto.email,
+        username: dto.username,
+        avatar: dto.avatar,
+        password: null,
+        phone: null,
+      },
+    });
   }
 
   async login(dto: LoginDto): Promise<Tokens> {
@@ -37,29 +50,20 @@ export class AuthService {
   }
 
   async googleLogin(req): Promise<Tokens> {
-    await this.register({
-      id: req.user.id,
-      email: req.user.email,
-      username: req.user.name,
-      avatar: req.user.avatar,
-      password: '',
-      phone: '',
-    });
+    const user: GGProfile = req.user;
+    await this.registerByGoogle(user);
     return this.createTokens(req.id, req.email);
   }
 
-  async logout(id: string) {
-    await this.databaseService.user.updateMany({
-      where: {
-        id: id,
-        refreshToken: {
-          not: null,
-        },
-      },
-      data: {
-        refreshToken: null,
-      },
-    });
+  async logout(id: string, rt: string) {
+    const user = await this.usersService.findById(id);
+    if (user && user.refreshToken.includes(rt)) {
+      user.refreshToken.map((i) => (i === rt ? null : i));
+      await this.databaseService.user.update({
+        where: { id: user.id },
+        data: user,
+      });
+    }
   }
 
   async refresh(id: string, rt: string): Promise<Tokens> {
@@ -81,7 +85,9 @@ export class AuthService {
         id: id,
       },
       data: {
-        refreshToken: hash,
+        refreshToken: {
+          push: hash,
+        },
       },
     });
   }

@@ -19,8 +19,12 @@ export class UsersService {
     return this.databaseService.user.findMany({});
   }
 
-  findOne(id: string) {
+  findById(id: string) {
     return this.databaseService.user.findUnique({ where: { id } });
+  }
+
+  findByEmail(email: string) {
+    return this.databaseService.user.findUnique({ where: { email } });
   }
 
   update(id: string, dto: Prisma.UserUpdateInput) {
@@ -34,9 +38,5 @@ export class UsersService {
 
   remove(id: string) {
     return this.databaseService.user.delete({ where: { id } });
-  }
-
-  findByEmail(email: string) {
-    return this.databaseService.user.findUnique({ where: { email } });
   }
 }
