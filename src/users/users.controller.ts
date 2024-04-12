@@ -27,11 +27,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get()
   @UseGuards(AuthGuard)
   @Tokens('access')
-  @Get()
   findById(@Request() req) {
     const id = req.user.id;
+    console.log('id', id);
     return this.usersService.findById(id);
   }
 
