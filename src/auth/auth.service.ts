@@ -6,6 +6,7 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { RedisService } from 'src/common/redis/redis.service';
 import { Tokens } from './types/token.type';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
@@ -18,6 +19,7 @@ export class AuthService {
     private readonly databaseService: DatabaseService,
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
+    private readonly redisService: RedisService,
   ) {}
 
   async register(dto: Prisma.UserCreateInput) {
@@ -67,17 +69,39 @@ export class AuthService {
   }
 
   async refresh(id: string, rt: string): Promise<Tokens> {
+    if (!(await this.validateToken(id, rt))) this.sendSecurityAlert(); // TODO: return exception
     const user = await this.databaseService.user.findUnique({
       where: { id: id },
     });
+    // console.log(user.refreshToken);
     if (!user) throw new ForbiddenException();
-    if (!bcrypt.compare(rt, user.refreshToken)) throw new ForbiddenException();
-    const tokens = await this.createTokens(user.id, user.email, user.role);
-    await this.storeRefreshToken(user.id, tokens.refresh_token);
-    return tokens;
+    for (const hashedToken of user.refreshToken) {
+      if (bcrypt.compare(rt, hashedToken)) {
+        this.cacheTokenBlacklist(user.id, rt);
+        // console.log('blacklist', rt);
+        const tokens = await this.createTokens(user.id, user.email, user.role);
+        await this.storeRefreshToken(user.id, tokens.refresh_token);
+        // console.log(tokens);
+        return tokens;
+      }
+    }
+    // TODO: exception
   }
 
   // func
+  async cacheTokenBlacklist(uid: string, rt: string) {
+    this.redisService.blacklistToken(uid, rt);
+  }
+
+  async validateToken(uid: string, rt: string) {
+    return this.redisService.validateSafeToken(uid, rt);
+  }
+
+  sendSecurityAlert() {
+    // TODO: exception / server sent event
+    console.log('xxxxxxx');
+  }
+
   async storeRefreshToken(id: string, rt: string) {
     const hash = await bcrypt.hash(rt, 10);
     await this.databaseService.user.update({

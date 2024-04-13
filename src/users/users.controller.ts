@@ -32,7 +32,7 @@ export class UsersController {
   @Tokens('access')
   findById(@Request() req) {
     const id = req.user.id;
-    console.log('id', id);
+    // console.log('id', id);
     return this.usersService.findById(id);
   }
 

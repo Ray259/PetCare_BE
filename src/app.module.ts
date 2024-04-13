@@ -6,8 +6,16 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { GoogleStrategy } from './auth/strategies/google.strategy';
+import { RedisModule } from './common/redis/redis.module';
+
 @Module({
-  imports: [DatabaseModule, UsersModule, AuthModule, ConfigModule.forRoot()],
+  imports: [
+    DatabaseModule,
+    UsersModule,
+    AuthModule,
+    RedisModule,
+    ConfigModule.forRoot(),
+  ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],
 })

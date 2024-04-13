@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 import { Prisma } from '@prisma/client';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from './Guard/jwt-auth.guard';
-import { Tokens } from '../common/decorator/tokens.decorator';
+import { Tokens } from 'src/common/decorator/tokens.decorator';
 import { Response } from 'express';
 import { GoogleOauthGuard } from './Guard/google-oauth.guard';
 
@@ -39,10 +39,10 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Tokens('refresh')
   @Get('refresh')
-  refreshToken(@Request() req) {
+  async refreshToken(@Request() req) {
     const user = req.user;
-    // console.log(user);
-    return this.authService.refresh(user.id, user.refreshToken);
+    const tokens = await this.authService.refresh(user.id, user.refreshToken);
+    return tokens;
   }
 
   @UseGuards(AuthGuard)
@@ -52,6 +52,8 @@ export class AuthController {
     const user = req.user;
     return this.authService.logout(user.id, user.refreshToken);
   }
+
+  // TODO: revoke all token
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)

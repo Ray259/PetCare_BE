@@ -30,12 +30,12 @@ export class AuthGuard implements CanActivate {
           t === 'access'
             ? process.env.JWT_ACCESS_SECRET || 'at-secret'
             : t === 'refresh'
-              ? process.env.JWT_REFRESH_SECRET || 'at-secret'
+              ? process.env.JWT_REFRESH_SECRET || 'rt-secret'
               : '',
       });
-      console.log('payload', payload);
+      // console.log('payload', payload);
       request['user'] = payload;
-      if (t==="refresh") request['user'].refreshToken = token;
+      if (t === 'refresh') request['user'].refreshToken = token;
     } catch (e) {
       throw e;
     }
