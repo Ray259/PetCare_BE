@@ -7,16 +7,26 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { GoogleStrategy } from './auth/strategies/google.strategy';
 import { RedisModule } from './common/redis/redis.module';
+import { NotificationModule } from './notification/notification.module';
+import { NotificationService } from './notification/notification.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    EventEmitterModule.forRoot({ global: true }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'test'),
+    }),
     DatabaseModule,
     UsersModule,
     AuthModule,
     RedisModule,
-    ConfigModule.forRoot(),
+    NotificationModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy],
+  providers: [AppService, GoogleStrategy, NotificationService],
 })
 export class AppModule {}

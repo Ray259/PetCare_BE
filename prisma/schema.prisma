@@ -23,6 +23,7 @@ model User {
   avatar String?
   gender String?
   pet Pet[]
+  notification Notification[]
   refreshToken String[]
 }
 
@@ -101,4 +102,16 @@ model Medicine {
   name String
   description String  @db.Text
   healthcare HealthcareService[]
+}
+
+model Notification {
+  id String @default(uuid()) @id
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  title String
+  description String  @db.Text
+  date DateTime
+  additionalInfo Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
