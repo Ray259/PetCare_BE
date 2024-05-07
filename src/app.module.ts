@@ -12,6 +12,7 @@ import { NotificationService } from './notification/notification.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PetsModule } from './pets/pets.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     AuthModule,
     RedisModule,
     NotificationModule,
+    PetsModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy, NotificationService],
