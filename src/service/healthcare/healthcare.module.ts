@@ -6,4 +6,4 @@ import { HealthcareController } from './healthcare.controller';
   controllers: [HealthcareController],
   providers: [HealthcareService],
 })
-export class PetsModule {}
+export class HealthcareServiceModule {}

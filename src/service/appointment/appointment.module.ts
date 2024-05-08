@@ -6,4 +6,4 @@ import { AppointmentServiceController } from './appointment.controller';
   controllers: [AppointmentServiceController],
   providers: [AppointmentService],
 })
-export class PetsModule {}
+export class AppointmentServiceModule {}

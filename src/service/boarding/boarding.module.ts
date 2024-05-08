@@ -6,4 +6,4 @@ import { BoardingServiceController } from './boarding.controller';
   controllers: [BoardingServiceController],
   providers: [BoardingService],
 })
-export class PetsModule {}
+export class BoardingServiceModule {}
