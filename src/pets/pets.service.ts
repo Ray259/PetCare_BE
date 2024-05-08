@@ -22,7 +22,7 @@ export class PetsService {
     return this.databaseService.pet.findMany({ where: { ownerId } });
   }
 
-  update(id: string, dto: Prisma.UserUpdateInput) {
+  update(id: string, dto: Prisma.PetUpdateInput) {
     return this.databaseService.pet.update({
       where: {
         id,
