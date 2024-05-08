@@ -18,6 +18,10 @@ export class PetsService {
     return this.databaseService.pet.findUnique({ where: { id } });
   }
 
+  findAllByUser(ownerId: string) {
+    return this.databaseService.pet.findMany({ where: { ownerId } });
+  }
+
   update(id: string, dto: Prisma.UserUpdateInput) {
     return this.databaseService.pet.update({
       where: {

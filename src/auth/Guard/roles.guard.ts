@@ -6,9 +6,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Roles } from 'src/common/decorator/roles.decorator';
+import { ROLES_KEY } from 'src/common/decorator/roles.decorator';
 import { extractHeaderTokens } from 'src/utils/auth/extractHeaderTokens.util';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -20,16 +21,20 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = extractHeaderTokens(request);
-    const roles = this.reflector.get(Roles, context.getHandler());
-    // console.log(roles);
     if (!token) throw new UnauthorizedException();
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    console.log('role', requiredRoles);
+    if (!requiredRoles) return true;
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_ACCESS_SECRET || 'at-secret',
       });
       // console.log(payload);
       const userRole = payload.role;
-      return matchRoles(roles, userRole);
+      return matchRoles(requiredRoles, userRole);
     } catch {
       throw new UnauthorizedException();
     }
