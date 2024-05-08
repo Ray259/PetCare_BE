@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { GroomingService } from './grooming.service';
+import { BoardingService } from './boarding.service';
 import { Prisma } from '@prisma/client';
 import { Tokens } from 'src/common/decorator/tokens.decorator';
 import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
@@ -16,17 +16,17 @@ import { RolesGuard } from 'src/auth/Guard/roles.guard';
 import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 
-@Controller('grooming-service')
-export class GroomingServiceController {
-  constructor(private readonly groomingService: GroomingService) {}
+@Controller('boarding-service')
+export class BoardingServiceController {
+  constructor(private readonly boardingService: BoardingService) {}
 
   @Post()
   @UseGuards(AuthGuard)
   @UseGuards(RolesGuard)
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
-  create(@Body() dto: Prisma.GroomingServiceCreateInput) {
-    return this.groomingService.create(dto);
+  create(@Body() dto: Prisma.BoardingServiceCreateInput) {
+    return this.boardingService.create(dto);
   }
 
   @Get('all')
@@ -35,7 +35,7 @@ export class GroomingServiceController {
   @Tokens('access')
   @Roles(Role.Admin)
   findAll() {
-    return this.groomingService.findAll();
+    return this.boardingService.findAll();
   }
 
   @Get(':id')
@@ -44,7 +44,7 @@ export class GroomingServiceController {
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
   findOne(@Param('id') id: string) {
-    return this.groomingService.findById(id);
+    return this.boardingService.findById(id);
   }
 
   @Get('all/pet=:id')
@@ -53,7 +53,7 @@ export class GroomingServiceController {
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
   findAllByUser(@Param('id') id: string) {
-    return this.groomingService.findAllByPet(id);
+    return this.boardingService.findAllByPet(id);
   }
 
   @Patch(':id')
@@ -63,9 +63,9 @@ export class GroomingServiceController {
   @Roles(Role.Admin, Role.User)
   update(
     @Param('id') id: string,
-    @Body() dto: Prisma.GroomingServiceUpdateInput,
+    @Body() dto: Prisma.BoardingServiceUpdateInput,
   ) {
-    return this.groomingService.update(id, dto);
+    return this.boardingService.update(id, dto);
   }
 
   @Delete(':id')
@@ -74,6 +74,6 @@ export class GroomingServiceController {
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
   remove(@Param('id') id: string) {
-    return this.groomingService.remove(id);
+    return this.boardingService.remove(id);
   }
 }
