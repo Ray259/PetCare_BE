@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { HealthcareService } from './healthcare.service';
+import { GroomingService } from './grooming.service';
 import { Prisma } from '@prisma/client';
 import { Tokens } from 'src/common/decorator/tokens.decorator';
 import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
@@ -16,17 +16,17 @@ import { RolesGuard } from 'src/auth/Guard/roles.guard';
 import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 
-@Controller('healthcare-service')
-export class HealthcareController {
-  constructor(private readonly healthcareService: HealthcareService) {}
+@Controller('groomingService-service')
+export class GroomingServiceController {
+  constructor(private readonly groomingService: GroomingService) {}
 
   @Post()
   @UseGuards(AuthGuard)
   @UseGuards(RolesGuard)
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
-  create(@Body() dto: Prisma.HealthcareServiceCreateInput) {
-    return this.healthcareService.create(dto);
+  create(@Body() dto: Prisma.GroomingServiceCreateInput) {
+    return this.groomingService.create(dto);
   }
 
   @Get('all')
@@ -35,7 +35,7 @@ export class HealthcareController {
   @Tokens('access')
   @Roles(Role.Admin)
   findAll() {
-    return this.healthcareService.findAll();
+    return this.groomingService.findAll();
   }
 
   @Get(':id')
@@ -44,7 +44,7 @@ export class HealthcareController {
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
   findOne(@Param('id') id: string) {
-    return this.healthcareService.findById(id);
+    return this.groomingService.findById(id);
   }
 
   @Get('all/pet=:id')
@@ -53,7 +53,7 @@ export class HealthcareController {
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
   findAllByUser(@Param('id') id: string) {
-    return this.healthcareService.findAllByPet(id);
+    return this.groomingService.findAllByPet(id);
   }
 
   @Patch(':id')
@@ -63,9 +63,9 @@ export class HealthcareController {
   @Roles(Role.Admin, Role.User)
   update(
     @Param('id') id: string,
-    @Body() dto: Prisma.HealthcareServiceUpdateInput,
+    @Body() dto: Prisma.GroomingServiceUpdateInput,
   ) {
-    return this.healthcareService.update(id, dto);
+    return this.groomingService.update(id, dto);
   }
 
   @Delete(':id')
@@ -74,6 +74,6 @@ export class HealthcareController {
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
   remove(@Param('id') id: string) {
-    return this.healthcareService.remove(id);
+    return this.groomingService.remove(id);
   }
 }

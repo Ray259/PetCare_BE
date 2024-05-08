@@ -18,7 +18,7 @@ export class HealthcareService {
     return this.databaseService.healthcareService.findUnique({ where: { id } });
   }
 
-  findAllByUser(petId: string) {
+  findAllByPet(petId: string) {
     return this.databaseService.healthcareService.findMany({
       where: { petId },
     });
