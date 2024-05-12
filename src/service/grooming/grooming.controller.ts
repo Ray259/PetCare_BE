@@ -6,61 +6,42 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { GroomingService } from './grooming.service';
 import { Prisma } from '@prisma/client';
-import { Tokens } from 'src/common/decorator/tokens.decorator';
-import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/Guard/roles.guard';
-import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
 
 @Controller('grooming-service')
 export class GroomingServiceController {
   constructor(private readonly groomingService: GroomingService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   create(@Body() dto: Prisma.GroomingServiceCreateInput) {
     return this.groomingService.create(dto);
   }
 
   @Get('all')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin)
+  @AuthUtils([Role.Admin], 'access')
   findAll() {
     return this.groomingService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   findOne(@Param('id') id: string) {
     return this.groomingService.findById(id);
   }
 
   @Get('all/pet=:id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   findAllByUser(@Param('id') id: string) {
     return this.groomingService.findAllByPet(id);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   update(
     @Param('id') id: string,
     @Body() dto: Prisma.GroomingServiceUpdateInput,
@@ -69,10 +50,7 @@ export class GroomingServiceController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   remove(@Param('id') id: string) {
     return this.groomingService.remove(id);
   }
