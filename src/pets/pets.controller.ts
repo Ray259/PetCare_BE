@@ -51,4 +51,10 @@ export class PetsController {
   remove(@Param('id') id: string) {
     return this.petsService.remove(id);
   }
+
+  @Get(':id/registered-services')
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  findRegisteredServices(@Param('id') id: string) {
+    return this.petsService.findRegisteredServices(id);
+  }
 }

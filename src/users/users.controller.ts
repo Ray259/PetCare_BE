@@ -22,6 +22,13 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get()
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  find(@Request() req) {
+    const id = req.user.id;
+    return this.usersService.findById(id);
+  }
+
   @Get(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
   findById(@Request() req, @Param('id') id: string) {

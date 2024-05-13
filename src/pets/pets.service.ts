@@ -34,4 +34,26 @@ export class PetsService {
   remove(id: string) {
     return this.databaseService.pet.delete({ where: { id } });
   }
+
+  async findRegisteredServices(id: string) {
+    const boarding = await this.databaseService.boardingService.findMany({
+      where: { petId: id },
+    });
+    const grooming = await this.databaseService.groomingService.findMany({
+      where: { petId: id },
+    });
+    const healthcare = await this.databaseService.healthcareService.findMany({
+      where: { petId: id },
+    });
+    const appointments = await this.databaseService.appointments.findMany({
+      where: { petId: id },
+    });
+
+    return [
+      { serviceName: 'Boarding Service', services: boarding },
+      { serviceName: 'Grooming Service', services: grooming },
+      { serviceName: 'Healthcare Service', services: healthcare },
+      { serviceName: 'Appointments', services: appointments },
+    ];
+  }
 }
