@@ -52,7 +52,7 @@ export class AppointmentServiceController {
   @UseGuards(RolesGuard)
   @Tokens('access')
   @Roles(Role.Admin, Role.User)
-  findAllByUser(@Param('id') id: string) {
+  findAllByPet(@Param('id') id: string) {
     return this.appointmentService.findAllByPet(id);
   }
 

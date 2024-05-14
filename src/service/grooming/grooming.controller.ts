@@ -36,7 +36,7 @@ export class GroomingServiceController {
 
   @Get('all/pet=:id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  findAllByUser(@Param('id') id: string) {
+  findAllByPet(@Param('id') id: string) {
     return this.groomingService.findAllByPet(id);
   }
 

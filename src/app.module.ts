@@ -17,6 +17,7 @@ import { HealthcareServiceModule } from './service/healthcare/healthcare.module'
 import { GroomingServiceModule } from './service/grooming/grooming.module';
 import { AppointmentServiceModule } from './service/appointment/appointment.module';
 import { BoardingServiceModule } from './service/boarding/boarding.module';
+import { ServiceManagerModule } from './service/ServiceManager.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BoardingServiceModule } from './service/boarding/boarding.module';
     GroomingServiceModule,
     AppointmentServiceModule,
     BoardingServiceModule,
+    ServiceManagerModule,
     AuthModule,
     RedisModule,
     NotificationModule,

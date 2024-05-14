@@ -36,7 +36,7 @@ export class HealthcareController {
 
   @Get('all/pet=:id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  findAllByUser(@Param('id') id: string) {
+  findAllByPet(@Param('id') id: string) {
     return this.healthcareService.findAllByPet(id);
   }
 
