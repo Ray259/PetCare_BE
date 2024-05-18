@@ -1,13 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
-import { IService } from '../IService';
+import { IService } from 'src/service/Base/IService';
+import { BaseService } from 'src/service/Base/BaseService.service';
 
 @Injectable()
-export class AppointmentService implements IService {
-  constructor(private readonly databaseService: DatabaseService) {}
+export class AppointmentService extends BaseService implements IService {
+  constructor(protected readonly databaseService: DatabaseService) {
+    super(databaseService);
+  }
+  serviceName: string;
+  protected getModel() {
+    return this.databaseService.appointments;
+  }
 
-  serviceName = 'Appointment Service';
+  protected getServiceName(): string {
+    return 'Appointment Service';
+  }
 
   async create(dto: Prisma.AppointmentsCreateInput) {
     return this.databaseService.appointments.create({ data: dto });

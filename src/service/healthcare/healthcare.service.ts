@@ -1,10 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { BaseService } from '../Base/BaseService.service';
+import { IService } from '../Base/IService';
 
 @Injectable()
-export class HealthcareService {
-  constructor(private readonly databaseService: DatabaseService) {}
+export class HealthcareService extends BaseService implements IService {
+  constructor(protected readonly databaseService: DatabaseService) {
+    super(databaseService);
+  }
+  serviceName: string;
+  protected getModel() {
+    return this.databaseService.groomingService;
+  }
+
+  protected getServiceName(): string {
+    return 'Boarding Service';
+  }
 
   async create(dto: Prisma.HealthcareServiceCreateInput) {
     return this.databaseService.healthcareService.create({ data: dto });
