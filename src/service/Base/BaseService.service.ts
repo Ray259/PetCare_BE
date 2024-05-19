@@ -1,12 +1,31 @@
-import { Controller, Get, Injectable, Query } from '@nestjs/common';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
-import { Role } from 'src/common/enums/role.enum';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { DiscoveryService } from '@nestjs/core';
 import { DatabaseService } from 'src/database/database.service';
+import { getRegisteredServiceName } from 'src/common/decorator/service.decorator';
 
 @Injectable()
-@Controller('services')
-export abstract class BaseService {
-  constructor(protected readonly databaseService: DatabaseService) {}
+export abstract class BaseService implements OnModuleInit {
+  private registeredServices: { serviceName: string; model: any }[] = [];
+
+  constructor(
+    protected readonly databaseService: DatabaseService,
+    @Inject(DiscoveryService)
+    protected readonly discoveryService: DiscoveryService,
+  ) {}
+
+  onModuleInit() {
+    const providers = this.discoveryService.getProviders();
+    providers.forEach((provider) => {
+      const serviceName = getRegisteredServiceName(provider.metatype);
+      if (serviceName) {
+        const instance = provider.instance;
+        const model = instance.getModel?.();
+        if (model) {
+          this.registeredServices.push({ serviceName, model });
+        }
+      }
+    });
+  }
 
   protected abstract getModel(): any;
   protected abstract getServiceName(): string;
@@ -23,33 +42,18 @@ export abstract class BaseService {
       });
   }
 
-  @Get('all-registered-services/pet')
-  @AuthUtils([Role.Admin, Role.User], 'access')
-  async findRegisteredServices(@Query('id') id: string) {
-    console.log(id);
-    const boarding = await this.databaseService.boardingService.findMany({
-      where: { petId: id },
-    });
-    const grooming = await this.databaseService.groomingService.findMany({
-      where: { petId: id },
-    });
-    const healthcare = await this.databaseService.healthcareService.findMany({
-      where: { petId: id },
-    });
-    const appointments = await this.databaseService.appointments.findMany({
-      where: { petId: id },
-    });
-
-    return [
-      { serviceName: 'Boarding Service', services: boarding },
-      { serviceName: 'Grooming Service', services: grooming },
-      { serviceName: 'Healthcare Service', services: healthcare },
-      { serviceName: 'Appointments', services: appointments },
-    ];
+  async findRegisteredServices(id: string) {
+    const results = await Promise.all(
+      this.registeredServices.map(async (service) => {
+        const services = await service.model.findMany({
+          where: { petId: id },
+        });
+        return { serviceName: service.serviceName, services };
+      }),
+    );
+    return results;
   }
 
-  @Get('all-registered-services')
-  @AuthUtils([Role.Admin], 'access')
   async getAllRegisteredServices() {
     const query = {
       include: {
@@ -60,18 +64,14 @@ export abstract class BaseService {
         },
       },
     };
-    const boarding = await this.databaseService.boardingService.findMany(query);
-    const grooming = await this.databaseService.groomingService.findMany(query);
-    const healthcare =
-      await this.databaseService.healthcareService.findMany(query);
-    const appointments =
-      await this.databaseService.appointments.findMany(query);
-
-    return [
-      { serviceName: 'Boarding Service', services: boarding },
-      { serviceName: 'Grooming Service', services: grooming },
-      { serviceName: 'Healthcare Service', services: healthcare },
-      { serviceName: 'Appointments', services: appointments },
-    ];
+    const results = await Promise.all(
+      this.registeredServices.map(async (service) => {
+        const services = await service.model.findMany(query);
+        console.log(service.serviceName, services.length > 0 ? 1 : 0);
+        return { serviceName: service.serviceName, services };
+      }),
+    );
+    console.log('///');
+    return results;
   }
 }

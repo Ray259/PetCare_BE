@@ -1,5 +1,4 @@
 export interface IService {
-  serviceName: string;
   create(dto: any);
   findAll(dto: any);
   findById(id: string);

@@ -17,6 +17,9 @@ import { HealthcareServiceModule } from './service/healthcare/healthcare.module'
 import { GroomingServiceModule } from './service/grooming/grooming.module';
 import { AppointmentServiceModule } from './service/appointment/appointment.module';
 import { BoardingServiceModule } from './service/boarding/boarding.module';
+import { BaseServiceController } from './service/Base/BaseService.controller';
+import { DiscoveryModule } from '@nestjs/core';
+import { BaseServiceModule } from './service/Base/BaseService.module';
 
 @Module({
   imports: [
@@ -35,8 +38,9 @@ import { BoardingServiceModule } from './service/boarding/boarding.module';
     AuthModule,
     RedisModule,
     NotificationModule,
+    BaseServiceModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, BaseServiceController],
   providers: [AppService, GoogleStrategy, NotificationService],
 })
 export class AppModule {}
