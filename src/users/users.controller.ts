@@ -13,8 +13,10 @@ import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { UserInterceptor } from './users.interceptor';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -14,8 +14,10 @@ import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { PetInterceptor } from './pets.interceptor';
 import { CreatePetDto } from './dto/create-pet.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('pets')
+@ApiTags('Pets')
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 

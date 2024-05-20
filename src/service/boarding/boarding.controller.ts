@@ -12,8 +12,10 @@ import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { CreateBoardingServiceDto } from '../dto/create/create-boarding-service.dto';
 import { UpdateBoardingServiceDto } from '../dto/update/update-boarding-service.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('boarding-service')
+@ApiTags('Boarding Service')
 export class BoardingServiceController {
   constructor(private readonly boardingService: BoardingService) {}
 

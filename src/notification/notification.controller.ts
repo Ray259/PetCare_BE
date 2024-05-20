@@ -3,8 +3,10 @@ import { NotificationService } from './notification.service';
 import { Observable } from 'rxjs';
 import { ServerMessage } from './type/message.type';
 import { NotificationDto } from './dto/notification.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('notification')
+@ApiTags('Notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 

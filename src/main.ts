@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { configSwagger } from 'src/config/api-docs';
 
 declare const module: any;
 const PORT = process.env.PORT || 3000;
@@ -12,17 +12,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors();
 
-  const config = new DocumentBuilder()
-    .setTitle('Petcare service API')
-    .setVersion('1.0')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'JWT',
-    )
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  configSwagger(app);
   await app.listen(PORT);
 
   if (module.hot) {

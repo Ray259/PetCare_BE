@@ -14,8 +14,10 @@ import { GoogleOauthGuard } from './Guard/google-oauth.guard';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
