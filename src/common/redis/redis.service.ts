@@ -28,4 +28,11 @@ export class RedisService {
     // console.log(storedValue);
     return storedValue === token ? false : true;
   }
+
+  async clearUserTokens(uid: string): Promise<void> {
+    const keys = await this.cacheManager.store.keys(`${uid}:*`);
+    for (const key of keys) {
+      await this.cacheManager.del(key);
+    }
+  }
 }

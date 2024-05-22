@@ -10,10 +10,10 @@ import {
 import { AuthService } from './auth.service';
 import { Prisma } from '@prisma/client';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from './Guard/jwt-auth.guard';
-import { Tokens } from 'src/common/decorator/tokens.decorator';
 import { Response } from 'express';
 import { GoogleOauthGuard } from './Guard/google-oauth.guard';
+import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -36,24 +36,26 @@ export class AuthController {
     return payload;
   }
 
-  @UseGuards(AuthGuard)
-  @Tokens('refresh')
   @Get('refresh')
+  @AuthUtils([Role.Admin, Role.User], 'refresh')
   async refreshToken(@Request() req) {
     const user = req.user;
     const tokens = await this.authService.refresh(user.id, user.refreshToken);
     return tokens;
   }
 
-  @UseGuards(AuthGuard)
-  @Tokens('refresh')
   @Get('logout')
+  @AuthUtils([Role.Admin, Role.User], 'refresh')
   logout(@Request() req) {
     const user = req.user;
     return this.authService.logout(user.id, user.refreshToken);
   }
 
-  // TODO: revoke all token
+  @AuthUtils([Role.Admin, Role.User], 'refresh')
+  logoutAll(@Request() req) {
+    const user = req.user;
+    return this.authService.logoutAll(user.id);
+  }
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)

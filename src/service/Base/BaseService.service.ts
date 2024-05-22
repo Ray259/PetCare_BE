@@ -67,11 +67,9 @@ export abstract class BaseService implements OnModuleInit {
     const results = await Promise.all(
       this.registeredServices.map(async (service) => {
         const services = await service.model.findMany(query);
-        console.log(service.serviceName, services.length > 0 ? 1 : 0);
         return { serviceName: service.serviceName, services };
       }),
     );
-    console.log('///');
     return results;
   }
 }

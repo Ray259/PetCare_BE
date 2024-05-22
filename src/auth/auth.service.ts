@@ -88,6 +88,17 @@ export class AuthService {
     // TODO: exception
   }
 
+  async logoutAll(uid: string) {
+    const user = await this.usersService.findById(uid);
+    if (user) {
+      user.refreshToken = [];
+      await this.databaseService.user.update({
+        where: { id: user.id },
+        data: { refreshToken: user.refreshToken },
+      });
+      await this.redisService.clearUserTokens(uid);
+    }
+  }
   // func
   async cacheTokenBlacklist(uid: string, rt: string) {
     this.redisService.blacklistToken(uid, rt);
