@@ -51,12 +51,12 @@ model Pet {
 model HealthcareService {
   id String @default(uuid()) @id
   petId String
-  description String  @db.Text
-  diet String  @db.Text
+  description String @db.Text
+  diet String @db.Text
   date DateTime
   medicine String
   additionalInfo Json?
-  pet Pet @relation(fields: [petId], references: [id])
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   medicineId Medicine @relation(fields: [medicine], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -67,7 +67,7 @@ model GroomingService {
   petId String
   date DateTime
   additionalInfo Json?
-  pet Pet @relation(fields: [petId], references: [id])
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -79,7 +79,7 @@ model BoardingService {
   address String
   date DateTime
   additionalInfo Json?
-  pet Pet @relation(fields: [petId], references: [id])
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -87,12 +87,12 @@ model BoardingService {
 model Appointments {
   id String @default(uuid()) @id
   petId String
-  description String  @db.Text
+  description String @db.Text
   status String
   followUp Boolean @default(false)
   date DateTime
   additionalInfo Json?
-  pet Pet @relation(fields: [petId], references: [id])
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -100,16 +100,16 @@ model Appointments {
 model Medicine {
   id String @default(uuid()) @id
   name String
-  description String  @db.Text
+  description String @db.Text
   healthcare HealthcareService[]
 }
 
 model Notification {
   id String @default(uuid()) @id
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   title String
-  description String  @db.Text
+  description String @db.Text
   date DateTime
   additionalInfo Json?
   createdAt DateTime @default(now())

@@ -49,10 +49,9 @@ export class UsersController {
     return this.usersService.update(id, dto);
   }
 
-  @Delete()
+  @Delete(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  remove(@Request() req) {
-    const id = req.params.id;
+  remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
 }
