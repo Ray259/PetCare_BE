@@ -42,10 +42,9 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
-  @Patch()
+  @Patch(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  update(@Request() req, @Body() dto: UpdateUserDto) {
-    const id = req.user.id;
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto);
   }
 
