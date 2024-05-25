@@ -12,8 +12,10 @@ import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
 import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('healthcare-service')
+@ApiTags('Healthcare service')
 export class HealthcareController {
   constructor(private readonly healthcareService: HealthcareService) {}
 

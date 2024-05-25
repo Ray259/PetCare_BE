@@ -12,8 +12,10 @@ import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { CreateGroomingServiceDto } from '../dto/create/create-grooming-service.dto';
 import { UpdateGroomingServiceDto } from '../dto/update/update-grooming-service.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('grooming-service')
+@ApiTags('Grooming Service')
 export class GroomingServiceController {
   constructor(private readonly groomingService: GroomingService) {}
 

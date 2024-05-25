@@ -2,8 +2,10 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { BaseService } from './BaseService.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('services')
+@ApiTags('Base service')
 export class BaseServiceController extends BaseService {
   protected getModel() {
     throw new Error('Method not implemented.');
