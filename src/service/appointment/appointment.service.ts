@@ -5,7 +5,7 @@ import { IService } from 'src/service/Base/IService';
 import { BaseService } from 'src/service/Base/BaseService.service';
 import { RegisterService } from 'src/common/decorator/service.decorator';
 import { DiscoveryService } from '@nestjs/core';
-import { CreateAppointmentDto } from '../Dto/create/create-appointment.dto';
+import { CreateAppointmentDto } from '../dto/create/create-appointment.dto';
 
 const SERVICE_NAME = 'Appointment Service';
 

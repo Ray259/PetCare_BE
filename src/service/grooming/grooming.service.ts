@@ -5,7 +5,7 @@ import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
-import { CreateGroomingServiceDto } from '../Dto/create/create-grooming-service.dto';
+import { CreateGroomingServiceDto } from '../dto/create/create-grooming-service.dto';
 
 const SERVICE_NAME = 'Grooming Service';
 

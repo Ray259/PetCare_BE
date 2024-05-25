@@ -5,7 +5,7 @@ import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
-import { CreateBoardingServiceDto } from '../Dto/create/create-boarding-service.dto';
+import { CreateBoardingServiceDto } from '../dto/create/create-boarding-service.dto';
 
 const SERVICE_NAME = 'Boarding Service';
 
