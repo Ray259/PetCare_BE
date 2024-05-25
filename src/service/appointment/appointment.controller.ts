@@ -6,70 +6,49 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
-import { Prisma } from '@prisma/client';
-import { Tokens } from 'src/common/decorator/tokens.decorator';
-import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/Guard/roles.guard';
-import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { CreateAppointmentDto } from '../dto/create/create-appointment.dto';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
+import { UpdateAppointmentDto } from '../dto/update/update-appointment.dto';
 
 @Controller('appointment-service')
 export class AppointmentServiceController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
-  create(@Body() dto: Prisma.AppointmentsCreateInput) {
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  create(@Body() dto: CreateAppointmentDto) {
     return this.appointmentService.create(dto);
   }
 
   @Get('all')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin)
+  @AuthUtils([Role.Admin], 'access')
   findAll() {
     return this.appointmentService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   findOne(@Param('id') id: string) {
     return this.appointmentService.findById(id);
   }
 
   @Get('all/pet=:id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   findAllByPet(@Param('id') id: string) {
     return this.appointmentService.findAllByPet(id);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
-  update(@Param('id') id: string, @Body() dto: Prisma.AppointmentsUpdateInput) {
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
     return this.appointmentService.update(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
-  @UseGuards(RolesGuard)
-  @Tokens('access')
-  @Roles(Role.Admin, Role.User)
+  @AuthUtils([Role.Admin, Role.User], 'access')
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(id);
   }

@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PetsService } from './pets.service';
 import { Prisma } from '@prisma/client';
 import { Role } from 'src/common/enums/role.enum';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
+import { PetInterceptor } from './pets.interceptor';
+import { CreatePetDto } from './dto/create-pet.dto';
 
 @Controller('pets')
 export class PetsController {
@@ -18,7 +21,8 @@ export class PetsController {
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() createPetDto: Prisma.PetCreateInput) {
+  @UseInterceptors(PetInterceptor)
+  create(@Body() createPetDto: CreatePetDto) {
     return this.petsService.create(createPetDto);
   }
 

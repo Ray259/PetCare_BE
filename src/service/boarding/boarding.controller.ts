@@ -8,9 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { BoardingService } from './boarding.service';
-import { Prisma } from '@prisma/client';
 import { Role } from 'src/common/enums/role.enum';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
+import { CreateBoardingServiceDto } from '../dto/create/create-boarding-service.dto';
+import { UpdateBoardingServiceDto } from '../dto/update/update-boarding-service.dto';
 
 @Controller('boarding-service')
 export class BoardingServiceController {
@@ -18,7 +19,7 @@ export class BoardingServiceController {
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: Prisma.BoardingServiceCreateInput) {
+  create(@Body() dto: CreateBoardingServiceDto) {
     return this.boardingService.create(dto);
   }
 
@@ -42,10 +43,7 @@ export class BoardingServiceController {
 
   @Patch(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  update(
-    @Param('id') id: string,
-    @Body() dto: Prisma.BoardingServiceUpdateInput,
-  ) {
+  update(@Param('id') id: string, @Body() dto: UpdateBoardingServiceDto) {
     return this.boardingService.update(id, dto);
   }
 

@@ -8,9 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { GroomingService } from './grooming.service';
-import { Prisma } from '@prisma/client';
 import { Role } from 'src/common/enums/role.enum';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
+import { CreateGroomingServiceDto } from '../dto/create/create-grooming-service.dto';
+import { UpdateGroomingServiceDto } from '../dto/update/update-grooming-service.dto';
 
 @Controller('grooming-service')
 export class GroomingServiceController {
@@ -18,7 +19,7 @@ export class GroomingServiceController {
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: Prisma.GroomingServiceCreateInput) {
+  create(@Body() dto: CreateGroomingServiceDto) {
     return this.groomingService.create(dto);
   }
 
@@ -42,10 +43,7 @@ export class GroomingServiceController {
 
   @Patch(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  update(
-    @Param('id') id: string,
-    @Body() dto: Prisma.GroomingServiceUpdateInput,
-  ) {
+  update(@Param('id') id: string, @Body() dto: UpdateGroomingServiceDto) {
     return this.groomingService.update(id, dto);
   }
 

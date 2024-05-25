@@ -8,19 +8,19 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Prisma } from '@prisma/client';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
 import { GoogleOauthGuard } from './Guard/google-oauth.guard';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  create(@Body() dto: Prisma.UserCreateInput) {
+  create(@Body() dto: CreateUserDto) {
     return this.authService.register(dto);
   }
 

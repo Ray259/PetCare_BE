@@ -9,10 +9,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Prisma } from '@prisma/client';
 import { Role } from 'src/common/enums/role.enum';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { UserInterceptor } from './users.interceptor';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -42,7 +42,7 @@ export class UsersController {
 
   @Patch()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  update(@Request() req, @Body() dto: Prisma.UserUpdateInput) {
+  update(@Request() req, @Body() dto: UpdateUserDto) {
     const id = req.user.id;
     return this.usersService.update(id, dto);
   }

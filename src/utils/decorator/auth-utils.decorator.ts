@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
 import { Roles } from 'src/common/decorator/roles.decorator';
 import { RolesGuard } from 'src/auth/Guard/roles.guard';
 import { Role } from 'src/common/enums/role.enum';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 export function AuthUtils(roles: Role[], token: string) {
   return applyDecorators(
@@ -11,5 +12,6 @@ export function AuthUtils(roles: Role[], token: string) {
     UseGuards(RolesGuard),
     Tokens(token),
     Roles(...roles),
+    ApiBearerAuth('JWT'),
   );
 }

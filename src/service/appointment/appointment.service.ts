@@ -5,6 +5,7 @@ import { IService } from 'src/service/Base/IService';
 import { BaseService } from 'src/service/Base/BaseService.service';
 import { RegisterService } from 'src/common/decorator/service.decorator';
 import { DiscoveryService } from '@nestjs/core';
+import { CreateAppointmentDto } from '../dto/create/create-appointment.dto';
 
 const SERVICE_NAME = 'Appointment Service';
 
@@ -27,7 +28,7 @@ export class AppointmentService extends BaseService implements IService {
     return this.serviceName;
   }
 
-  async create(dto: Prisma.AppointmentsCreateInput) {
+  async create(dto: CreateAppointmentDto) {
     return this.databaseService.appointments.create({ data: dto });
   }
 

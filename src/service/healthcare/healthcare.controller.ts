@@ -8,9 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { HealthcareService } from './healthcare.service';
-import { Prisma } from '@prisma/client';
 import { Role } from 'src/common/enums/role.enum';
-import { AuthUtils } from 'src/common/decorator/group/auth-utils.decorator';
+import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
+import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
+import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
 
 @Controller('healthcare-service')
 export class HealthcareController {
@@ -18,7 +19,7 @@ export class HealthcareController {
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: Prisma.HealthcareServiceCreateInput) {
+  create(@Body() dto: CreateHealthcareServiceDto) {
     return this.healthcareService.create(dto);
   }
 
@@ -42,10 +43,7 @@ export class HealthcareController {
 
   @Patch(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  update(
-    @Param('id') id: string,
-    @Body() dto: Prisma.HealthcareServiceUpdateInput,
-  ) {
+  update(@Param('id') id: string, @Body() dto: UpdateHealthcareServiceDto) {
     return this.healthcareService.update(id, dto);
   }
 

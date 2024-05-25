@@ -5,6 +5,7 @@ import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
+import { CreateGroomingServiceDto } from '../dto/create/create-grooming-service.dto';
 
 const SERVICE_NAME = 'Grooming Service';
 
@@ -27,7 +28,7 @@ export class GroomingService extends BaseService implements IService {
     return this.serviceName;
   }
 
-  async create(dto: Prisma.GroomingServiceCreateInput) {
+  async create(dto: CreateGroomingServiceDto) {
     return this.databaseService.groomingService.create({ data: dto });
   }
 
