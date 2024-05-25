@@ -5,7 +5,7 @@ import { IService } from 'src/service/Base/IService';
 import { BaseService } from 'src/service/Base/BaseService.service';
 import { RegisterService } from 'src/common/decorator/service.decorator';
 import { DiscoveryService } from '@nestjs/core';
-import { CreateAppointmentDto } from '../dto/create/create-appointment.dto';
+import { CreateAppointmentDto } from '../Dto/create/create-appointment.dto';
 
 const SERVICE_NAME = 'Appointment Service';
 
@@ -37,7 +37,15 @@ export class AppointmentService extends BaseService implements IService {
   }
 
   findById(id: string) {
-    return this.databaseService.appointments.findUnique({ where: { id } });
+    return this.databaseService.appointments
+      .findUnique({
+        where: { id },
+        include: { pet: true },
+      })
+      .then((res: any) => {
+        res.serviceName = this.serviceName;
+        return res;
+      });
   }
 
   findAllByPet(petId: string) {
