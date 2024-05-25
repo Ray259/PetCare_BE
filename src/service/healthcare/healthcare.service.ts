@@ -5,7 +5,7 @@ import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
-import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
+import { CreateHealthcareServiceDto } from '../Dto/create/create-healthcare-service.dto';
 
 const SERVICE_NAME = 'Healthcare Service';
 
@@ -37,7 +37,15 @@ export class HealthcareService extends BaseService implements IService {
   }
 
   findById(id: string) {
-    return this.databaseService.healthcareService.findUnique({ where: { id } });
+    return this.databaseService.healthcareService
+      .findUnique({
+        where: { id },
+        include: { pet: true },
+      })
+      .then((res: any) => {
+        res.serviceName = this.serviceName;
+        return res;
+      });
   }
 
   findAllByPet(petId: string) {

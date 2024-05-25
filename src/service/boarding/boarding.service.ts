@@ -5,7 +5,7 @@ import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
-import { CreateBoardingServiceDto } from '../dto/create/create-boarding-service.dto';
+import { CreateBoardingServiceDto } from '../Dto/create/create-boarding-service.dto';
 
 const SERVICE_NAME = 'Boarding Service';
 
@@ -21,7 +21,7 @@ export class BoardingService extends BaseService implements IService {
   }
   private readonly serviceName: string = SERVICE_NAME;
   protected getModel() {
-    return this.databaseService.appointments;
+    return this.databaseService.boardingService;
   }
 
   protected getServiceName(): string {
@@ -37,7 +37,15 @@ export class BoardingService extends BaseService implements IService {
   }
 
   findById(id: string) {
-    return this.databaseService.boardingService.findUnique({ where: { id } });
+    return this.databaseService.boardingService
+      .findUnique({
+        where: { id },
+        include: { pet: true },
+      })
+      .then((res: any) => {
+        res.serviceName = this.serviceName;
+        return res;
+      });
   }
 
   findAllByPet(petId: string) {
