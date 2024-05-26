@@ -18,7 +18,18 @@ export class PetsService {
   };
 
   async create(dto: CreatePetDto) {
-    return this.databaseService.pet.create({ data: dto });
+    return this.databaseService.pet.create({
+      data: {
+        name: dto.name,
+        age: dto.age,
+        color: dto.color,
+        gender: dto.gender,
+        breed: dto.breed,
+        avatar: dto.avatar,
+        weight: dto.weight,
+        ownerId: dto.ownerId,
+      },
+    });
   }
 
   findAll() {

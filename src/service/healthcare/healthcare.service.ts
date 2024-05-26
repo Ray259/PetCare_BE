@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
 import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
+import { MedicineService } from 'src/medicine/medicine.service';
+import { CreateMedicineDto } from 'src/medicine/dto/create-medicine.dto';
+import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
 
 const SERVICE_NAME = 'Healthcare Service';
 
@@ -14,6 +16,7 @@ const SERVICE_NAME = 'Healthcare Service';
 export class HealthcareService extends BaseService implements IService {
   constructor(
     protected readonly databaseService: DatabaseService,
+    private readonly medicineService: MedicineService,
     @Inject(DiscoveryService)
     protected readonly discoveryService: DiscoveryService,
   ) {
@@ -29,7 +32,35 @@ export class HealthcareService extends BaseService implements IService {
   }
 
   async create(dto: CreateHealthcareServiceDto) {
-    return this.databaseService.healthcareService.create({ data: dto });
+    let medicineId: string | undefined;
+    if (dto.medicine) {
+      const medicine = await this.databaseService.medicine.findMany({
+        where: { name: dto.medicine },
+      });
+      if (medicine.length > 0) {
+        medicineId = medicine[0].id;
+      }
+    }
+
+    return this.databaseService.healthcareService.create({
+      data: {
+        petId: dto.petId,
+        description: dto.description,
+        diet: dto.diet,
+        date: dto.date,
+        medicine: medicineId ? [medicineId] : undefined,
+        additionalInfo: dto.additionalInfo,
+      },
+    });
+  }
+
+  private async createMedicine(name: string): Promise<string> {
+    const newMedicineDto: CreateMedicineDto = {
+      name: name,
+      description: '',
+    };
+    const createdMedicine = await this.medicineService.create(newMedicineDto);
+    return createdMedicine.id;
   }
 
   findAll() {
@@ -54,12 +85,37 @@ export class HealthcareService extends BaseService implements IService {
     });
   }
 
-  update(id: string, dto: Prisma.HealthcareServiceUpdateInput) {
+  async update(id: string, dto: UpdateHealthcareServiceDto) {
+    let medicineIds: string[] | undefined;
+    if (dto.medicine && dto.medicine.length > 0) {
+      medicineIds = [];
+      for (const medName of dto.medicine) {
+        const medicines = await this.databaseService.medicine.findMany({
+          where: {
+            name: medName,
+          },
+        });
+
+        if (medicines.length > 0) {
+          medicineIds.push(medicines[0].id);
+        } else {
+          const createdMedicineId = await this.createMedicine(medName);
+          medicineIds.push(createdMedicineId);
+        }
+      }
+    }
+
     return this.databaseService.healthcareService.update({
       where: {
         id,
       },
-      data: dto,
+      data: {
+        description: dto.description,
+        diet: dto.diet,
+        date: dto.date,
+        medicine: medicineIds ? { set: medicineIds } : undefined,
+        additionalInfo: dto.additionalInfo,
+      },
     });
   }
 

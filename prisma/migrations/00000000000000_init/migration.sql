@@ -21,11 +21,13 @@ CREATE TABLE "Pet" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "age" INTEGER NOT NULL,
+    "weight" DOUBLE PRECISION NOT NULL,
     "color" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
     "breed" TEXT NOT NULL,
     "avatar" TEXT NOT NULL,
     "ownerId" TEXT NOT NULL,
+    "disease" TEXT,
 
     CONSTRAINT "Pet_pkey" PRIMARY KEY ("id")
 );
@@ -37,7 +39,7 @@ CREATE TABLE "HealthcareService" (
     "description" TEXT NOT NULL,
     "diet" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
-    "medicine" TEXT NOT NULL,
+    "medicine" TEXT[],
     "additionalInfo" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -90,7 +92,7 @@ CREATE TABLE "Appointments" (
 CREATE TABLE "Medicine" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
 
     CONSTRAINT "Medicine_pkey" PRIMARY KEY ("id")
 );
@@ -117,9 +119,6 @@ ALTER TABLE "Pet" ADD CONSTRAINT "Pet_ownerId_fkey" FOREIGN KEY ("ownerId") REFE
 
 -- AddForeignKey
 ALTER TABLE "HealthcareService" ADD CONSTRAINT "HealthcareService_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "HealthcareService" ADD CONSTRAINT "HealthcareService_medicine_fkey" FOREIGN KEY ("medicine") REFERENCES "Medicine"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "GroomingService" ADD CONSTRAINT "GroomingService_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE CASCADE ON UPDATE CASCADE;

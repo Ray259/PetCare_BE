@@ -28,7 +28,7 @@ export class CreateHealthcareServiceDto {
   date: Date;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   medicine: string;
 
   @IsObject()

@@ -10,9 +10,12 @@ import { Observable } from 'rxjs';
 export class PetInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const { age } = request.body;
+    const { age, weight } = request.body;
     if (typeof age === 'string') {
       request.body.age = parseInt(age, 10);
+    }
+    if (typeof weight === 'string') {
+      request.body.weight = parseFloat(weight);
     }
     return next.handle();
   }

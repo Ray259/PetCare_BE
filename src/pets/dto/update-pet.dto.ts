@@ -9,5 +9,7 @@ export class UpdatePetDto {
   gender?: string;
   breed?: string;
   avatar?: string;
+  weight?: number;
+  disease?: string;
   ownerId: string;
 }

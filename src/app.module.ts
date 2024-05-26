@@ -19,6 +19,7 @@ import { AppointmentServiceModule } from './service/appointment/appointment.modu
 import { BoardingServiceModule } from './service/boarding/boarding.module';
 import { BaseServiceController } from './service/Base/BaseService.controller';
 import { BaseServiceModule } from './service/Base/BaseService.module';
+import { MedicineModule } from './medicine/medicine.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { BaseServiceModule } from './service/Base/BaseService.module';
     AuthModule,
     RedisModule,
     NotificationModule,
+    MedicineModule,
     BaseServiceModule,
   ],
   controllers: [AppController, BaseServiceController],
