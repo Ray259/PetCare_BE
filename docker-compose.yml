@@ -14,6 +14,7 @@ services:
 
   nest-api:
     container_name: nest-api
+    restart: always
     build: .  
     ports:
       - 8080:8080

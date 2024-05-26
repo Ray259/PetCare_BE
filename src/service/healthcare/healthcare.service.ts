@@ -5,7 +5,6 @@ import { IService } from '../Base/IService';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
 import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
-import { MedicineService } from 'src/medicine/medicine.service';
 import { CreateMedicineDto } from 'src/medicine/dto/create-medicine.dto';
 import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
 
@@ -16,7 +15,6 @@ const SERVICE_NAME = 'Healthcare Service';
 export class HealthcareService extends BaseService implements IService {
   constructor(
     protected readonly databaseService: DatabaseService,
-    private readonly medicineService: MedicineService,
     @Inject(DiscoveryService)
     protected readonly discoveryService: DiscoveryService,
   ) {
@@ -39,6 +37,8 @@ export class HealthcareService extends BaseService implements IService {
       });
       if (medicine.length > 0) {
         medicineId = medicine[0].id;
+      } else {
+        medicineId = await this.createMedicine(dto.medicine);
       }
     }
 
@@ -59,7 +59,9 @@ export class HealthcareService extends BaseService implements IService {
       name: name,
       description: '',
     };
-    const createdMedicine = await this.medicineService.create(newMedicineDto);
+    const createdMedicine = await this.databaseService.medicine.create({
+      data: newMedicineDto,
+    });
     return createdMedicine.id;
   }
 
