@@ -32,28 +32,6 @@ export class BoardingService extends BaseService implements IService {
     return this.databaseService.boardingService.create({ data: dto });
   }
 
-  findAll() {
-    return this.databaseService.boardingService.findMany({});
-  }
-
-  findById(id: string) {
-    return this.databaseService.boardingService
-      .findUnique({
-        where: { id },
-        include: { pet: true },
-      })
-      .then((res: any) => {
-        res.serviceName = this.serviceName;
-        return res;
-      });
-  }
-
-  findAllByPet(petId: string) {
-    return this.databaseService.boardingService.findMany({
-      where: { petId },
-    });
-  }
-
   update(id: string, dto: Prisma.BoardingServiceUpdateInput) {
     return this.databaseService.boardingService.update({
       where: {
@@ -61,9 +39,5 @@ export class BoardingService extends BaseService implements IService {
       },
       data: dto,
     });
-  }
-
-  remove(id: string) {
-    return this.databaseService.boardingService.delete({ where: { id } });
   }
 }

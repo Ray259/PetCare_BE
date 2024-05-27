@@ -28,6 +28,7 @@ export class UsersController {
 
   @Get()
   @AuthUtils([Role.Admin, Role.User], 'access')
+  @UseInterceptors(UserInterceptor)
   find(@Request() req) {
     const id = req.user.id;
     return this.usersService.findById(id);

@@ -21,7 +21,7 @@ export class BaseServiceController extends BaseService {
 
   @Get('all-registered-services')
   @AuthUtils([Role.Admin], 'access')
-  async findAll() {
+  async findAllService() {
     return this.getAllRegisteredServices();
   }
 }

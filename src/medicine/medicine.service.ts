@@ -12,6 +12,10 @@ export class MedicineService {
     });
   }
 
+  findAll() {
+    return this.databaseService.medicine.findMany({});
+  }
+
   async findByName(name: string) {
     return this.databaseService.medicine.findMany({
       where: { name },
@@ -22,9 +26,5 @@ export class MedicineService {
     return this.databaseService.medicine.findUnique({
       where: { id },
     });
-  }
-
-  test() {
-    console.log('test');
   }
 }

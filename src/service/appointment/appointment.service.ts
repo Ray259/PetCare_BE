@@ -32,28 +32,6 @@ export class AppointmentService extends BaseService implements IService {
     return this.databaseService.appointments.create({ data: dto });
   }
 
-  findAll() {
-    return this.databaseService.appointments.findMany({});
-  }
-
-  findById(id: string) {
-    return this.databaseService.appointments
-      .findUnique({
-        where: { id },
-        include: { pet: true },
-      })
-      .then((res: any) => {
-        res.serviceName = this.serviceName;
-        return res;
-      });
-  }
-
-  findAllByPet(petId: string) {
-    return this.databaseService.appointments.findMany({
-      where: { petId },
-    });
-  }
-
   update(id: string, dto: Prisma.AppointmentsUpdateInput) {
     return this.databaseService.appointments.update({
       where: {
@@ -61,9 +39,5 @@ export class AppointmentService extends BaseService implements IService {
       },
       data: dto,
     });
-  }
-
-  remove(id: string) {
-    return this.databaseService.appointments.delete({ where: { id } });
   }
 }

@@ -16,6 +16,11 @@ export class MedicineController {
     return this.medicineService.findByName(name);
   }
 
+  @Get('all')
+  async findAll() {
+    return this.medicineService.findAll();
+  }
+
   @Get('id/:id')
   async findById(@Param('id') id: string) {
     return this.medicineService.findById(id);

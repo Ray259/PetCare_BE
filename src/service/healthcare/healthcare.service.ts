@@ -65,45 +65,22 @@ export class HealthcareService extends BaseService implements IService {
     return createdMedicine.id;
   }
 
-  findAll() {
-    return this.databaseService.healthcareService.findMany({});
-  }
-
-  findById(id: string) {
-    return this.databaseService.healthcareService
-      .findUnique({
-        where: { id },
-        include: { pet: true },
-      })
-      .then((res: any) => {
-        res.serviceName = this.serviceName;
-        return res;
-      });
-  }
-
-  findAllByPet(petId: string) {
-    return this.databaseService.healthcareService.findMany({
-      where: { petId },
-    });
-  }
-
   async update(id: string, dto: UpdateHealthcareServiceDto) {
     let medicineIds: string[] | undefined;
     if (dto.medicine && dto.medicine.length > 0) {
+      console.log(typeof dto.medicine);
       medicineIds = [];
-      for (const medName of dto.medicine) {
-        const medicines = await this.databaseService.medicine.findMany({
-          where: {
-            name: medName,
-          },
-        });
+      const medicines = await this.databaseService.medicine.findMany({
+        where: {
+          name: dto.medicine,
+        },
+      });
 
-        if (medicines.length > 0) {
-          medicineIds.push(medicines[0].id);
-        } else {
-          const createdMedicineId = await this.createMedicine(medName);
-          medicineIds.push(createdMedicineId);
-        }
+      if (medicines.length > 0) {
+        medicineIds.push(medicines[0].id);
+      } else {
+        const createdMedicineId = await this.createMedicine(dto.medicine);
+        medicineIds.push(createdMedicineId);
       }
     }
 
@@ -119,9 +96,5 @@ export class HealthcareService extends BaseService implements IService {
         additionalInfo: dto.additionalInfo,
       },
     });
-  }
-
-  remove(id: string) {
-    return this.databaseService.healthcareService.delete({ where: { id } });
   }
 }

@@ -42,6 +42,20 @@ export abstract class BaseService implements OnModuleInit {
       });
   }
 
+  findAll() {
+    return this.getModel().findMany({});
+  }
+
+  remove(id: string) {
+    return this.getModel().delete({ where: { id } });
+  }
+
+  findAllByPet(petId: string) {
+    return this.getModel().findMany({
+      where: { petId },
+    });
+  }
+
   async findRegisteredServices(id: string) {
     const results = await Promise.all(
       this.registeredServices.map(async (service) => {

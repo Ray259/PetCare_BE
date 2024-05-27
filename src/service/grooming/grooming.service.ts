@@ -32,28 +32,6 @@ export class GroomingService extends BaseService implements IService {
     return this.databaseService.groomingService.create({ data: dto });
   }
 
-  findAll() {
-    return this.databaseService.groomingService.findMany({});
-  }
-
-  findById(id: string) {
-    return this.databaseService.groomingService
-      .findUnique({
-        where: { id },
-        include: { pet: true },
-      })
-      .then((res: any) => {
-        res.serviceName = 'Grooming Service';
-        return res;
-      });
-  }
-
-  findAllByPet(petId: string) {
-    return this.databaseService.groomingService.findMany({
-      where: { petId },
-    });
-  }
-
   update(id: string, dto: Prisma.GroomingServiceUpdateInput) {
     return this.databaseService.groomingService.update({
       where: {
@@ -61,9 +39,5 @@ export class GroomingService extends BaseService implements IService {
       },
       data: dto,
     });
-  }
-
-  remove(id: string) {
-    return this.databaseService.groomingService.delete({ where: { id } });
   }
 }

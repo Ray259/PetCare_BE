@@ -18,7 +18,7 @@ export class UpdateHealthcareServiceDto {
 
   @IsString()
   @IsOptional()
-  medicine?: string[];
+  medicine?: string;
 
   @IsObject()
   @IsOptional()
