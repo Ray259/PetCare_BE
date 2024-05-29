@@ -14,16 +14,15 @@ import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
 import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { MedicineService } from 'src/medicine/medicine.service';
-import { MedicineInterceptor } from './healthcare.interceptor';
+import {
+  GetHealthcareMedicineInterceptor,
+  CreateOrUpdateHealthcareMedicineInterceptor,
+} from './healthcare.interceptor';
 
 @Controller('healthcare-service')
 @ApiTags('Healthcare service')
 export class HealthcareController {
-  constructor(
-    private readonly healthcareService: HealthcareService,
-    private readonly medicineService: MedicineService,
-  ) {}
+  constructor(private readonly healthcareService: HealthcareService) {}
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
@@ -38,7 +37,7 @@ export class HealthcareController {
   }
 
   @Get(':id')
-  @UseInterceptors(MedicineInterceptor)
+  @UseInterceptors(GetHealthcareMedicineInterceptor)
   @AuthUtils([Role.Admin, Role.User], 'access')
   findOne(@Param('id') id: string) {
     return this.healthcareService.findById(id);
@@ -51,6 +50,7 @@ export class HealthcareController {
   }
 
   @Patch(':id')
+  @UseInterceptors(CreateOrUpdateHealthcareMedicineInterceptor)
   @AuthUtils([Role.Admin, Role.User], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateHealthcareServiceDto) {
     return this.healthcareService.update(id, dto);

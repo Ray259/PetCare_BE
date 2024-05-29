@@ -68,6 +68,14 @@ export abstract class BaseService implements OnModuleInit {
     return results;
   }
 
+  getListAllService() {
+    return Promise.all(
+      this.registeredServices.map(async (service) => {
+        return service.serviceName;
+      }),
+    );
+  }
+
   async getAllRegisteredServices() {
     const query = {
       include: {

@@ -1,4 +1,10 @@
-import { IsDateString, IsOptional, IsString, IsObject } from 'class-validator';
+import {
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsObject,
+  IsArray,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
 
@@ -23,4 +29,7 @@ export class UpdateHealthcareServiceDto {
   @IsObject()
   @IsOptional()
   additionalInfo?: Record<string, any>;
+
+  @IsArray()
+  medIds?: string[];
 }

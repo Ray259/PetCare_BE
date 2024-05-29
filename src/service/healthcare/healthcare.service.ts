@@ -67,23 +67,9 @@ export class HealthcareService extends BaseService implements IService {
 
   async update(id: string, dto: UpdateHealthcareServiceDto) {
     let medicineIds: string[] | undefined;
-    if (dto.medicine && dto.medicine.length > 0) {
-      console.log(typeof dto.medicine);
-      medicineIds = [];
-      const medicines = await this.databaseService.medicine.findMany({
-        where: {
-          name: dto.medicine,
-        },
-      });
-
-      if (medicines.length > 0) {
-        medicineIds.push(medicines[0].id);
-      } else {
-        const createdMedicineId = await this.createMedicine(dto.medicine);
-        medicineIds.push(createdMedicineId);
-      }
+    if (dto.medIds) {
+      medicineIds = dto.medIds;
     }
-
     return this.databaseService.healthcareService.update({
       where: {
         id,

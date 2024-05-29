@@ -24,4 +24,9 @@ export class BaseServiceController extends BaseService {
   async findAllService() {
     return this.getAllRegisteredServices();
   }
+
+  @Get('our-services')
+  ourService() {
+    return this.getListAllService();
+  }
 }
