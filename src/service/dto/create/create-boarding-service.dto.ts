@@ -6,6 +6,7 @@ import {
   IsString,
   IsUUID,
   IsObject,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
@@ -17,11 +18,11 @@ export class CreateBoardingServiceDto {
   petId: string;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   cage: number;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   address: string;
 
   @IsDateString()
@@ -31,4 +32,8 @@ export class CreateBoardingServiceDto {
   @IsObject()
   @IsOptional()
   additionalInfo?: Record<string, any>;
+
+  @IsBoolean()
+  @IsOptional()
+  isApproved?: boolean;
 }

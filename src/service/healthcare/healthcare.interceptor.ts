@@ -1,6 +1,7 @@
 import {
   CallHandler,
   ExecutionContext,
+  Inject,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
@@ -9,6 +10,10 @@ import { map } from 'rxjs/operators';
 import { DatabaseService } from 'src/database/database.service';
 import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
 import { CreateMedicineDto } from 'src/medicine/dto/create-medicine.dto';
+import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
+import { Reflector } from '@nestjs/core';
+import { RequestTypes } from 'src/common/decorator/request-type.decorator';
+import { RequestType } from 'src/common/enums/request-type.enum';
 
 @Injectable()
 export class GetHealthcareMedicineInterceptor implements NestInterceptor {
@@ -38,21 +43,13 @@ export class GetHealthcareMedicineInterceptor implements NestInterceptor {
 export class CreateOrUpdateHealthcareMedicineInterceptor
   implements NestInterceptor
 {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    @Inject(DatabaseService)
+    private readonly databaseService: DatabaseService,
+    private readonly reflector: Reflector,
+  ) {}
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
-    /**
-     * Request medicine string ('a; b; c') - extract, query by names - map all ids to medIds array in dto
-     * Service and controller handle update by medIds
-     * Intercept response with joined extracted medicine string
-     **/
-    const req = context.switchToHttp().getRequest();
-    const dto: UpdateHealthcareServiceDto = req.body;
-    const meds: string[] = extractMeds(dto.medicine);
-
+  async getMedIds(meds: string[]): Promise<string[]> {
     const medIds: string[] = await Promise.all(
       meds.map(async (med) => {
         const exMed = await this.databaseService.medicine.findFirst({
@@ -69,10 +66,35 @@ export class CreateOrUpdateHealthcareMedicineInterceptor
         }
       }),
     );
+    return medIds;
+  }
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
+    /**
+     * Request medicine string ('a; b; c') - extract, query by names - map all ids to medIds array in dto
+     * Service and controller handle update by medIds
+     * Intercept response with joined extracted medicine string
+     **/
+    const req = context.switchToHttp().getRequest();
+    const dtoType = this.reflector.get(RequestTypes, context.getHandler());
+    let joinedMeds: string;
+    let medIds: string[];
+    let dto: CreateHealthcareServiceDto | UpdateHealthcareServiceDto;
 
-    dto.medIds = medIds;
+    if (dtoType === RequestType.Create) {
+      dto = req.body as CreateHealthcareServiceDto;
+    } else if (dtoType === RequestType.Update) {
+      dto = req.body as UpdateHealthcareServiceDto;
+    }
 
-    const joinedMeds = meds.join('; ');
+    if (dto) {
+      const meds: string[] = extractMeds(dto.medicine);
+      medIds = await this.getMedIds(meds);
+      dto.medIds = medIds;
+      joinedMeds = meds.join('; ');
+    }
 
     return next.handle().pipe(
       map((response) => {

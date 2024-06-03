@@ -36,11 +36,12 @@ CREATE TABLE "Pet" (
 CREATE TABLE "HealthcareService" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "diet" TEXT NOT NULL,
+    "description" TEXT,
+    "diet" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
     "medicine" TEXT[],
     "additionalInfo" JSONB,
+    "isApproved" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -53,6 +54,7 @@ CREATE TABLE "GroomingService" (
     "petId" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "additionalInfo" JSONB,
+    "isApproved" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -63,10 +65,11 @@ CREATE TABLE "GroomingService" (
 CREATE TABLE "BoardingService" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
-    "cage" INTEGER NOT NULL,
-    "address" TEXT NOT NULL,
+    "cage" INTEGER,
+    "address" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
     "additionalInfo" JSONB,
+    "isApproved" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -77,11 +80,12 @@ CREATE TABLE "BoardingService" (
 CREATE TABLE "Appointments" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "description" TEXT,
+    "status" TEXT,
     "followUp" BOOLEAN NOT NULL DEFAULT false,
     "date" TIMESTAMP(3) NOT NULL,
     "additionalInfo" JSONB,
+    "isApproved" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -102,7 +106,7 @@ CREATE TABLE "Notification" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
     "additionalInfo" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

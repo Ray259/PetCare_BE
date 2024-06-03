@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { GroomingService } from './grooming.service';
 import { Role } from 'src/common/enums/role.enum';
@@ -21,8 +22,9 @@ export class GroomingServiceController {
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: CreateGroomingServiceDto) {
-    return this.groomingService.create(dto);
+  create(@Body() dto: CreateGroomingServiceDto, @Request() req) {
+    const role = req.user.role;
+    return this.groomingService.create(role, dto);
   }
 
   @Get('all')
@@ -47,6 +49,12 @@ export class GroomingServiceController {
   @AuthUtils([Role.Admin, Role.User], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateGroomingServiceDto) {
     return this.groomingService.update(id, dto);
+  }
+
+  @Patch(':id')
+  @AuthUtils([Role.Admin], 'access')
+  approve(@Param('id') id: string) {
+    return this.groomingService.approveService(id);
   }
 
   @Delete(':id')

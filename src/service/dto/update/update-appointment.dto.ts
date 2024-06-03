@@ -30,4 +30,8 @@ export class UpdateAppointmentDto {
   @IsObject()
   @IsOptional()
   additionalInfo?: Record<string, any>;
+
+  @IsBoolean()
+  @IsOptional()
+  isApproved?: boolean;
 }

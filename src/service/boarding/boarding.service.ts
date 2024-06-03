@@ -28,8 +28,12 @@ export class BoardingService extends BaseService implements IService {
     return this.serviceName;
   }
 
-  async create(dto: CreateBoardingServiceDto) {
-    return this.databaseService.boardingService.create({ data: dto });
+  async create(role: string, dto: CreateBoardingServiceDto) {
+    if (role === 'user') {
+      return this.createBase(dto);
+    } else if (role === 'admin') {
+      return this.databaseService.boardingService.create({ data: dto });
+    }
   }
 
   update(id: string, dto: Prisma.BoardingServiceUpdateInput) {

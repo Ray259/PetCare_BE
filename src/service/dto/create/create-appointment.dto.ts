@@ -17,11 +17,11 @@ export class CreateAppointmentDto {
   petId: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   status: string;
 
   @IsBoolean()
@@ -35,4 +35,8 @@ export class CreateAppointmentDto {
   @IsObject()
   @IsOptional()
   additionalInfo?: Record<string, any>;
+
+  @IsBoolean()
+  @IsOptional()
+  isApproved?: boolean;
 }

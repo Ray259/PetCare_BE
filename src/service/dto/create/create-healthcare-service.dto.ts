@@ -5,6 +5,8 @@ import {
   IsString,
   IsUUID,
   IsObject,
+  IsArray,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
@@ -16,11 +18,11 @@ export class CreateHealthcareServiceDto {
   petId: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   diet: string;
 
   @IsDateString()
@@ -34,4 +36,11 @@ export class CreateHealthcareServiceDto {
   @IsObject()
   @IsOptional()
   additionalInfo?: Record<string, any>;
+
+  @IsArray()
+  medIds?: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  isApproved?: boolean;
 }

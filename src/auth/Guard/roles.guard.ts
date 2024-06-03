@@ -34,6 +34,7 @@ export class RolesGuard implements CanActivate {
       });
       // console.log(payload);
       const userRole = payload.role;
+      request.role = userRole;
       return matchRoles(requiredRoles, userRole);
     } catch {
       throw new UnauthorizedException();
@@ -41,7 +42,7 @@ export class RolesGuard implements CanActivate {
   }
 }
 
-function matchRoles(roles: string[], userRoles: any): boolean {
+function matchRoles(roles: string[], userRoles: string): boolean {
   if (!roles.includes(userRoles)) {
     throw new ForbiddenException();
   }

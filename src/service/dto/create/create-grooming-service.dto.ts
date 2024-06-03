@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsUUID,
   IsObject,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
@@ -21,4 +22,8 @@ export class CreateGroomingServiceDto {
   @IsObject()
   @IsOptional()
   additionalInfo?: Record<string, any>;
+
+  @IsBoolean()
+  @IsOptional()
+  isApproved?: boolean;
 }

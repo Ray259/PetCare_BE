@@ -53,12 +53,13 @@ model Pet {
 model HealthcareService {
   id String @default(uuid()) @id
   petId String
-  description String @db.Text
-  diet String @db.Text
+  description String? @db.Text
+  diet String? @db.Text
   date DateTime
   medicine String[]
   additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  isApproved Boolean? @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -69,6 +70,7 @@ model GroomingService {
   date DateTime
   additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  isApproved Boolean? @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -76,10 +78,11 @@ model GroomingService {
 model BoardingService {
   id String @default(uuid()) @id
   petId String
-  cage Int
-  address String
+  cage Int?
+  address String?
   date DateTime
   additionalInfo Json?
+  isApproved Boolean? @default(false)
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -88,11 +91,12 @@ model BoardingService {
 model Appointments {
   id String @default(uuid()) @id
   petId String
-  description String @db.Text
-  status String
+  description String? @db.Text
+  status String?
   followUp Boolean @default(false)
   date DateTime
   additionalInfo Json?
+  isApproved Boolean? @default(false)
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -109,7 +113,7 @@ model Notification {
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   title String
-  description String @db.Text
+  description String? @db.Text
   date DateTime
   additionalInfo Json?
   createdAt DateTime @default(now())

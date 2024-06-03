@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { Role } from 'src/common/enums/role.enum';
@@ -21,8 +22,9 @@ export class AppointmentServiceController {
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: CreateAppointmentDto) {
-    return this.appointmentService.create(dto);
+  create(@Body() dto: CreateAppointmentDto, @Request() req) {
+    const role = req.user.role;
+    return this.appointmentService.create(role, dto);
   }
 
   @Get('all')
@@ -47,6 +49,12 @@ export class AppointmentServiceController {
   @AuthUtils([Role.Admin, Role.User], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
     return this.appointmentService.update(id, dto);
+  }
+
+  @Patch(':id')
+  @AuthUtils([Role.Admin], 'access')
+  approve(@Param('id') id: string) {
+    return this.appointmentService.approveService(id);
   }
 
   @Delete(':id')

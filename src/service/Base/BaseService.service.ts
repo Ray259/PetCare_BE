@@ -2,6 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { DatabaseService } from 'src/database/database.service';
 import { getRegisteredServiceName } from 'src/common/decorator/service.decorator';
+import { BaseDto } from '../dto/create/Create-Base.dto';
 
 @Injectable()
 export abstract class BaseService implements OnModuleInit {
@@ -30,6 +31,12 @@ export abstract class BaseService implements OnModuleInit {
   protected abstract getModel(): any;
   protected abstract getServiceName(): string;
 
+  createBase(dto: BaseDto) {
+    return this.getModel().create({
+      data: { petId: dto.petId, date: dto.date },
+    });
+  }
+
   findById(id: string) {
     return this.getModel()
       .findUnique({
@@ -40,6 +47,13 @@ export abstract class BaseService implements OnModuleInit {
         res.serviceName = this.getServiceName();
         return res;
       });
+  }
+
+  approveService(id: string) {
+    return this.getModel().update({
+      where: { id },
+      data: { isApproved: true },
+    });
   }
 
   findAll() {

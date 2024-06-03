@@ -28,8 +28,12 @@ export class GroomingService extends BaseService implements IService {
     return this.serviceName;
   }
 
-  async create(dto: CreateGroomingServiceDto) {
-    return this.databaseService.groomingService.create({ data: dto });
+  async create(role: string, dto: CreateGroomingServiceDto) {
+    if (role === 'user') {
+      return this.createBase(dto);
+    } else if (role === 'admin') {
+      return this.databaseService.groomingService.create({ data: dto });
+    }
   }
 
   update(id: string, dto: Prisma.GroomingServiceUpdateInput) {

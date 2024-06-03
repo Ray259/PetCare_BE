@@ -28,8 +28,12 @@ export class AppointmentService extends BaseService implements IService {
     return this.serviceName;
   }
 
-  async create(dto: CreateAppointmentDto) {
-    return this.databaseService.appointments.create({ data: dto });
+  async create(role: string, dto: CreateAppointmentDto) {
+    if (role === 'user') {
+      return this.createBase(dto);
+    } else if (role === 'admin') {
+      return this.databaseService.appointments.create({ data: dto });
+    }
   }
 
   update(id: string, dto: Prisma.AppointmentsUpdateInput) {

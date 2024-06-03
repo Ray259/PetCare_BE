@@ -1,5 +1,5 @@
 export interface IService {
-  create(dto: any);
+  create(role: string, dto: any);
   findAll(dto: any);
   findById(id: string);
   findAllByPet(id: string);

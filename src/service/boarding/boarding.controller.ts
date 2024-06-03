@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { BoardingService } from './boarding.service';
 import { Role } from 'src/common/enums/role.enum';
@@ -24,8 +25,9 @@ export class BoardingServiceController {
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
   @UseInterceptors(BoardingInterceptor)
-  create(@Body() dto: CreateBoardingServiceDto) {
-    return this.boardingService.create(dto);
+  create(@Body() dto: CreateBoardingServiceDto, @Request() req) {
+    const role = req.user.role;
+    return this.boardingService.create(role, dto);
   }
 
   @Get('all')
@@ -50,6 +52,12 @@ export class BoardingServiceController {
   @AuthUtils([Role.Admin, Role.User], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateBoardingServiceDto) {
     return this.boardingService.update(id, dto);
+  }
+
+  @Patch(':id')
+  @AuthUtils([Role.Admin], 'access')
+  approve(@Param('id') id: string) {
+    return this.boardingService.approveService(id);
   }
 
   @Delete(':id')
