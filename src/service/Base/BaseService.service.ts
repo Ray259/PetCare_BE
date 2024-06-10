@@ -2,10 +2,20 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { DatabaseService } from 'src/database/database.service';
 import { getRegisteredServiceName } from 'src/common/decorator/service.decorator';
-import { BaseDto } from '../dto/create/Create-Base.dto';
+import { CreateDto } from '../dto/create/Create-Base.dto';
+import { UpdateDto } from '../dto/update/Update-Base.dto';
 
+/**
+ * Base service providing common methods for all services (update, create, find, remove).
+ *
+ * Extended classes must provide the following methods:
+ * - getModel(): any (returning the model from the database service)
+ * - getServiceName(): string (returning the service name)
+ */
 @Injectable()
-export abstract class BaseService implements OnModuleInit {
+export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
+  implements OnModuleInit
+{
   private registeredServices: { serviceName: string; model: any }[] = [];
 
   constructor(
@@ -31,9 +41,32 @@ export abstract class BaseService implements OnModuleInit {
   protected abstract getModel(): any;
   protected abstract getServiceName(): string;
 
-  createBase(dto: BaseDto) {
+  createBase(dto: CreateDto) {
     return this.getModel().create({
       data: { petId: dto.petId, date: dto.date },
+    });
+  }
+
+  async create(role: string, dto: T1) {
+    if (role === 'user') {
+      return this.createBase(dto);
+    } else if (role === 'admin') {
+      const { petId, ...data } = dto;
+      return this.getModel().create({
+        data: {
+          ...data,
+          pet: { connect: { id: petId } },
+        },
+      });
+    }
+  }
+
+  update(id: string, dto: T2) {
+    return this.getModel().update({
+      where: {
+        id,
+      },
+      data: dto,
     });
   }
 

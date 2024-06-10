@@ -1,46 +1,62 @@
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  IsObject,
-  IsArray,
-  IsBoolean,
-} from 'class-validator';
+import { IsOptional, IsString, IsArray, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
+import { CreateDto } from './Create-Base.dto';
 
 @ApplyToAllProperties(ApiProperty)
-export class CreateHealthcareServiceDto {
-  @IsUUID()
-  @IsNotEmpty()
-  petId: string;
-
+export class CreateHealthcareServiceDto extends CreateDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @IsNumber()
+  @IsOptional()
+  temperature: number;
+
+  @IsNumber()
+  @IsOptional()
+  heartRate: number;
+
+  @IsNumber()
+  @IsOptional()
+  respiratoryRate: number;
+
+  @IsNumber()
+  @IsOptional()
+  weight: number;
+
+  @IsString()
+  @IsOptional()
+  bodyCondition: string;
+
+  @IsString()
+  @IsOptional()
+  symptoms: string;
+
+  @IsString()
+  @IsOptional()
+  bloodTest: string;
+
+  @IsString()
+  @IsOptional()
+  urineTest: string;
+
+  @IsString()
+  @IsOptional()
+  xRay: string;
+
+  @IsString()
+  @IsOptional()
+  diagnosis: string;
 
   @IsString()
   @IsOptional()
   diet: string;
 
-  @IsDateString()
-  @IsNotEmpty()
-  date: Date;
-
   @IsString()
   @IsOptional()
   medicine: string;
 
-  @IsObject()
-  @IsOptional()
-  additionalInfo?: Record<string, any>;
-
   @IsArray()
   medIds?: string[];
-
-  @IsBoolean()
-  @IsOptional()
-  isApproved?: boolean;
 }

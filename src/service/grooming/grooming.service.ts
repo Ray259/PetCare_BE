@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { BaseService } from '../Base/BaseService.service';
 import { IService } from '../Base/IService';
@@ -11,7 +10,10 @@ const SERVICE_NAME = 'Grooming Service';
 
 @Injectable()
 @RegisterService(SERVICE_NAME)
-export class GroomingService extends BaseService implements IService {
+export class GroomingService
+  extends BaseService<CreateGroomingServiceDto, CreateGroomingServiceDto>
+  implements IService
+{
   constructor(
     protected readonly databaseService: DatabaseService,
     @Inject(DiscoveryService)
@@ -26,22 +28,5 @@ export class GroomingService extends BaseService implements IService {
 
   protected getServiceName(): string {
     return this.serviceName;
-  }
-
-  async create(role: string, dto: CreateGroomingServiceDto) {
-    if (role === 'user') {
-      return this.createBase(dto);
-    } else if (role === 'admin') {
-      return this.databaseService.groomingService.create({ data: dto });
-    }
-  }
-
-  update(id: string, dto: Prisma.GroomingServiceUpdateInput) {
-    return this.databaseService.groomingService.update({
-      where: {
-        id,
-      },
-      data: dto,
-    });
   }
 }

@@ -1,20 +1,13 @@
-import {
-  IsBoolean,
-  IsDateString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  IsObject,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
+import { CreateDto } from './Create-Base.dto';
 
 @ApplyToAllProperties(ApiProperty)
-export class CreateAppointmentDto {
-  @IsUUID()
+export class CreateAppointmentDto extends CreateDto {
+  @IsString()
   @IsNotEmpty()
-  petId: string;
+  doctor: string;
 
   @IsString()
   @IsOptional()
@@ -27,16 +20,4 @@ export class CreateAppointmentDto {
   @IsBoolean()
   @IsOptional()
   followUp?: boolean;
-
-  @IsDateString()
-  @IsNotEmpty()
-  date: Date;
-
-  @IsObject()
-  @IsOptional()
-  additionalInfo?: Record<string, any>;
-
-  @IsBoolean()
-  @IsOptional()
-  isApproved?: boolean;
 }

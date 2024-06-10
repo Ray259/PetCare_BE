@@ -1,5 +1,6 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('user', 'admin');
+CREATE TYPE "Gender" AS ENUM ('male', 'female');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -10,7 +11,7 @@ CREATE TABLE "User" (
     "phone" TEXT,
     "role" "Role" NOT NULL DEFAULT 'user',
     "avatar" TEXT,
-    "gender" TEXT,
+    "gender" "Gender" NOT NULL,
     "refreshToken" TEXT[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -23,7 +24,7 @@ CREATE TABLE "Pet" (
     "age" INTEGER NOT NULL,
     "weight" DOUBLE PRECISION NOT NULL,
     "color" TEXT NOT NULL,
-    "gender" TEXT NOT NULL,
+    "gender" "Gender" NOT NULL,
     "breed" TEXT NOT NULL,
     "avatar" TEXT NOT NULL,
     "ownerId" TEXT NOT NULL,
@@ -37,6 +38,16 @@ CREATE TABLE "HealthcareService" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
     "description" TEXT,
+    "temperature" FLOAT,
+    "heartRate" INTEGER,
+    "respiratoryRate" INTEGER,
+    "weight" FLOAT,
+    "bodyCondition" TEXT,
+    "symptoms" TEXT,
+    "bloodTest" TEXT,
+    "urineTest" TEXT,
+    "xRay" TEXT,
+    "diagnosis" TEXT,
     "diet" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
     "medicine" TEXT[],
@@ -80,6 +91,7 @@ CREATE TABLE "BoardingService" (
 CREATE TABLE "Appointments" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
+    "doctor" TEXT,
     "description" TEXT,
     "status" TEXT,
     "followUp" BOOLEAN NOT NULL DEFAULT false,

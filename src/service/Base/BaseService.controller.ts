@@ -6,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 @Controller('services')
 @ApiTags('Base service')
-export class BaseServiceController extends BaseService {
+export class BaseServiceController extends BaseService<any, any> {
   protected getModel() {
     throw new Error('Method not implemented.');
   }

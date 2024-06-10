@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Gender } from 'src/common/enums/gender.enum';
 import { Role } from 'src/common/enums/role.enum';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
 
@@ -10,5 +11,5 @@ export class CreateUserDto {
   phone?: string | null;
   role?: Role;
   avatar?: string | null;
-  gender?: string | null;
+  gender?: Gender;
 }

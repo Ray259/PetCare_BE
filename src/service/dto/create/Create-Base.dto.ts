@@ -1,6 +1,13 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class BaseDto {
+export class CreateDto {
   @IsString()
   @IsNotEmpty()
   petId: string;
@@ -8,4 +15,12 @@ export class BaseDto {
   @IsDateString()
   @IsNotEmpty()
   date: Date;
+
+  @IsObject()
+  @IsOptional()
+  additionalInfo?: Record<string, any>;
+
+  @IsBoolean()
+  @IsOptional()
+  isApproved?: boolean;
 }

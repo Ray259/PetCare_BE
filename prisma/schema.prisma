@@ -21,7 +21,7 @@ model User {
   phone String?
   role Role @default(user)
   avatar String?
-  gender String?
+  gender Gender?
   pet Pet[]
   notification Notification[]
   refreshToken String[]
@@ -32,13 +32,18 @@ enum Role {
   admin
 }
 
+enum Gender {
+  male
+  female
+}
+
 model Pet {
   id String @default(uuid()) @id
   name String
   age Int
   weight Float
   color String
-  gender String
+  gender Gender
   breed String
   avatar String
   ownerId String
@@ -54,6 +59,16 @@ model HealthcareService {
   id String @default(uuid()) @id
   petId String
   description String? @db.Text
+  temperature Float?
+  heartRate Int?
+  respiratoryRate Int?
+  weight Float?
+  bodyCondition String? @db.Text
+  symptoms String? @db.Text
+  bloodTest String? @db.Text
+  urineTest String? @db.Text
+  xRay String? @db.Text
+  diagnosis String? @db.Text
   diet String? @db.Text
   date DateTime
   medicine String[]
@@ -91,6 +106,7 @@ model BoardingService {
 model Appointments {
   id String @default(uuid()) @id
   petId String
+  doctor String?
   description String? @db.Text
   status String?
   followUp Boolean @default(false)

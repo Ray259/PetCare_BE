@@ -1,15 +1,10 @@
-import {
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsObject,
-} from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
+import { CreateDto } from '../create/Create-Base.dto';
 
 @ApplyToAllProperties(ApiProperty)
-export class UpdateBoardingServiceDto {
+export class UpdateBoardingServiceDto extends CreateDto {
   @IsInt()
   @IsOptional()
   cage?: number;
@@ -17,12 +12,4 @@ export class UpdateBoardingServiceDto {
   @IsString()
   @IsOptional()
   address?: string;
-
-  @IsDateString()
-  @IsOptional()
-  date?: Date;
-
-  @IsObject()
-  @IsOptional()
-  additionalInfo?: Record<string, any>;
 }

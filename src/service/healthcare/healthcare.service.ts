@@ -11,7 +11,10 @@ const SERVICE_NAME = 'Healthcare Service';
 
 @Injectable()
 @RegisterService(SERVICE_NAME)
-export class HealthcareService extends BaseService implements IService {
+export class HealthcareService
+  extends BaseService<CreateHealthcareServiceDto, UpdateHealthcareServiceDto>
+  implements IService
+{
   constructor(
     protected readonly databaseService: DatabaseService,
     @Inject(DiscoveryService)
@@ -28,38 +31,15 @@ export class HealthcareService extends BaseService implements IService {
     return this.serviceName;
   }
 
-  async create(role: string, dto: CreateHealthcareServiceDto) {
-    if (role === 'user') {
-      return this.createBase(dto);
-    } else if (role === 'admin') {
-      return this.databaseService.healthcareService.create({
-        data: {
-          petId: dto.petId,
-          description: dto.description,
-          diet: dto.diet,
-          date: dto.date,
-          medicine: dto.medIds,
-          additionalInfo: dto.additionalInfo,
-        },
-      });
-    }
-  }
-
   async update(id: string, dto: UpdateHealthcareServiceDto) {
-    let medicineIds: string[] | undefined;
-    if (dto.medIds) {
-      medicineIds = dto.medIds;
-    }
+    const { medIds, ...data } = dto;
     return this.databaseService.healthcareService.update({
       where: {
         id,
       },
       data: {
-        description: dto.description,
-        diet: dto.diet,
-        date: dto.date,
-        medicine: medicineIds ? { set: medicineIds } : undefined,
-        additionalInfo: dto.additionalInfo,
+        ...data,
+        medicine: medIds ? { set: medIds } : undefined,
       },
     });
   }

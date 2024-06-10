@@ -89,7 +89,20 @@ export class CreateOrUpdateHealthcareMedicineInterceptor
       dto = req.body as UpdateHealthcareServiceDto;
     }
 
-    if (dto) {
+    if (typeof dto.temperature === 'string') {
+      dto.temperature = parseFloat(dto.temperature);
+    }
+    if (typeof dto.heartRate === 'string') {
+      dto.heartRate = parseFloat(dto.heartRate);
+    }
+    if (typeof dto.weight === 'string') {
+      dto.weight = parseFloat(dto.weight);
+    }
+    if (typeof dto.respiratoryRate === 'string') {
+      dto.respiratoryRate = parseFloat(dto.respiratoryRate);
+    }
+
+    if (dto.medicine && dto.medicine.length > 0) {
       const meds: string[] = extractMeds(dto.medicine);
       medIds = await this.getMedIds(meds);
       dto.medIds = medIds;
@@ -100,6 +113,10 @@ export class CreateOrUpdateHealthcareMedicineInterceptor
       map((response) => {
         return {
           ...response,
+          temparature: dto.temperature,
+          heartRate: dto.heartRate,
+          weight: dto.weight,
+          respiratoryRate: dto.respiratoryRate,
           medicine: joinedMeds,
         };
       }),
