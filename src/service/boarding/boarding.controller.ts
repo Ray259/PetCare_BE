@@ -7,27 +7,29 @@ import {
   Param,
   Delete,
   UseInterceptors,
-  Request,
 } from '@nestjs/common';
 import { BoardingService } from './boarding.service';
 import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
-import { CreateBoardingServiceDto } from '../dto/create/create-boarding-service.dto';
-import { UpdateBoardingServiceDto } from '../dto/update/update-boarding-service.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateBoardingServiceDto } from 'src/service/dto/create/create-boarding-service.dto';
+import { UpdateBoardingServiceDto } from 'src/service/dto/update/update-boarding-service.dto';
 import { BoardingInterceptor } from './boarding.interceptor';
+import { IServiceApproval } from 'src/service/Base/IServiceApproval';
+import { IServiceController } from 'src/service/Base/IServiceController';
 
 @Controller('boarding-service')
 @ApiTags('Boarding Service')
-export class BoardingServiceController {
+export class BoardingServiceController
+  implements IServiceController, IServiceApproval
+{
   constructor(private readonly boardingService: BoardingService) {}
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
   @UseInterceptors(BoardingInterceptor)
-  create(@Body() dto: CreateBoardingServiceDto, @Request() req) {
-    const role = req.user.role;
-    return this.boardingService.create(role, dto);
+  create(@Body() dto: CreateBoardingServiceDto) {
+    return this.boardingService.create(dto);
   }
 
   @Get('all')
@@ -38,7 +40,7 @@ export class BoardingServiceController {
 
   @Get(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  findOne(@Param('id') id: string) {
+  findById(@Param('id') id: string) {
     return this.boardingService.findById(id);
   }
 
@@ -54,10 +56,22 @@ export class BoardingServiceController {
     return this.boardingService.update(id, dto);
   }
 
-  @Patch(':id')
+  @Patch('approve/:id')
   @AuthUtils([Role.Admin], 'access')
-  approve(@Param('id') id: string) {
+  approveService(@Param('id') id: string) {
     return this.boardingService.approveService(id);
+  }
+
+  @Patch('reject/:id')
+  @AuthUtils([Role.Admin], 'access')
+  rejectService(@Param('id') id: string) {
+    return this.boardingService.rejectService(id);
+  }
+
+  @Patch('complete/:id')
+  @AuthUtils([Role.Admin], 'access')
+  completeService(@Param('id') id: string) {
+    return this.boardingService.completeService(id);
   }
 
   @Delete(':id')

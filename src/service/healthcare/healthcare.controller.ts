@@ -7,33 +7,35 @@ import {
   Param,
   Delete,
   UseInterceptors,
-  Request,
 } from '@nestjs/common';
 import { HealthcareService } from './healthcare.service';
 import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
-import { CreateHealthcareServiceDto } from '../dto/create/create-healthcare-service.dto';
-import { UpdateHealthcareServiceDto } from '../dto/update/update-healthcare-service.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateHealthcareServiceDto } from 'src/service/dto/create/create-healthcare-service.dto';
+import { UpdateHealthcareServiceDto } from 'src/service/dto/update/update-healthcare-service.dto';
 import {
   GetHealthcareMedicineInterceptor,
   CreateOrUpdateHealthcareMedicineInterceptor,
 } from './healthcare.interceptor';
 import { RequestType } from 'src/common/enums/request-type.enum';
 import { RequestTypes } from 'src/common/decorator/request-type.decorator';
+import { IServiceApproval } from 'src/service/Base/IServiceApproval';
+import { IServiceController } from 'src/service/Base/IServiceController';
 
 @Controller('healthcare-service')
 @ApiTags('Healthcare service')
-export class HealthcareController {
+export class HealthcareController
+  implements IServiceController, IServiceApproval
+{
   constructor(private readonly healthcareService: HealthcareService) {}
 
   @Post()
   @RequestTypes(RequestType.Create)
   @UseInterceptors(CreateOrUpdateHealthcareMedicineInterceptor)
   @AuthUtils([Role.Admin, Role.User], 'access')
-  async create(@Body() dto: CreateHealthcareServiceDto, @Request() req) {
-    const role = req.user.role;
-    return this.healthcareService.create(role, dto);
+  async create(@Body() dto: CreateHealthcareServiceDto) {
+    return this.healthcareService.create(dto);
   }
 
   @Get('all')
@@ -45,7 +47,7 @@ export class HealthcareController {
   @Get(':id')
   @UseInterceptors(GetHealthcareMedicineInterceptor)
   @AuthUtils([Role.Admin, Role.User], 'access')
-  findOne(@Param('id') id: string) {
+  findById(@Param('id') id: string) {
     return this.healthcareService.findById(id);
   }
 
@@ -65,8 +67,20 @@ export class HealthcareController {
 
   @Patch('approve/:id')
   @AuthUtils([Role.Admin], 'access')
-  approve(@Param('id') id: string) {
+  approveService(@Param('id') id: string) {
     return this.healthcareService.approveService(id);
+  }
+
+  @Patch('reject/:id')
+  @AuthUtils([Role.Admin], 'access')
+  rejectService(@Param('id') id: string) {
+    return this.healthcareService.rejectService(id);
+  }
+
+  @Patch('complete/:id')
+  @AuthUtils([Role.Admin], 'access')
+  completeService(@Param('id') id: string) {
+    return this.healthcareService.completeService(id);
   }
 
   @Delete(':id')

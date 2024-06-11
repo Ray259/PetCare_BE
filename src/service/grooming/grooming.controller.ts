@@ -6,25 +6,27 @@ import {
   Patch,
   Param,
   Delete,
-  Request,
 } from '@nestjs/common';
 import { GroomingService } from './grooming.service';
 import { Role } from 'src/common/enums/role.enum';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
-import { CreateGroomingServiceDto } from '../dto/create/create-grooming-service.dto';
-import { UpdateGroomingServiceDto } from '../dto/update/update-grooming-service.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateGroomingServiceDto } from 'src/service/dto/create/create-grooming-service.dto';
+import { UpdateGroomingServiceDto } from 'src/service/dto/update/update-grooming-service.dto';
+import { IServiceController } from 'src/service/Base/IServiceController';
+import { IServiceApproval } from 'src/service/Base/IServiceApproval';
 
 @Controller('grooming-service')
 @ApiTags('Grooming Service')
-export class GroomingServiceController {
+export class GroomingServiceController
+  implements IServiceController, IServiceApproval
+{
   constructor(private readonly groomingService: GroomingService) {}
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: CreateGroomingServiceDto, @Request() req) {
-    const role = req.user.role;
-    return this.groomingService.create(role, dto);
+  create(@Body() dto: CreateGroomingServiceDto) {
+    return this.groomingService.create(dto);
   }
 
   @Get('all')
@@ -35,7 +37,7 @@ export class GroomingServiceController {
 
   @Get(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  findOne(@Param('id') id: string) {
+  findById(@Param('id') id: string) {
     return this.groomingService.findById(id);
   }
 
@@ -51,10 +53,22 @@ export class GroomingServiceController {
     return this.groomingService.update(id, dto);
   }
 
-  @Patch(':id')
+  @Patch('approve/:id')
   @AuthUtils([Role.Admin], 'access')
-  approve(@Param('id') id: string) {
+  approveService(@Param('id') id: string) {
     return this.groomingService.approveService(id);
+  }
+
+  @Patch('reject/:id')
+  @AuthUtils([Role.Admin], 'access')
+  rejectService(@Param('id') id: string) {
+    return this.groomingService.rejectService(id);
+  }
+
+  @Patch('complete/:id')
+  @AuthUtils([Role.Admin], 'access')
+  completeService(@Param('id') id: string) {
+    return this.groomingService.completeService(id);
   }
 
   @Delete(':id')

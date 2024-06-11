@@ -6,25 +6,27 @@ import {
   Patch,
   Param,
   Delete,
-  Request,
 } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { Role } from 'src/common/enums/role.enum';
-import { CreateAppointmentDto } from '../dto/create/create-appointment.dto';
+import { CreateAppointmentDto } from 'src/service/dto/create/create-appointment.dto';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
-import { UpdateAppointmentDto } from '../dto/update/update-appointment.dto';
+import { UpdateAppointmentDto } from 'src/service/dto/update/update-appointment.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { IServiceController } from 'src/service/Base/IServiceController';
+import { IServiceApproval } from 'src/service/Base/IServiceApproval';
 
 @Controller('appointment-service')
 @ApiTags('Appointments')
-export class AppointmentServiceController {
+export class AppointmentServiceController
+  implements IServiceController, IServiceApproval
+{
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Post()
   @AuthUtils([Role.Admin, Role.User], 'access')
-  create(@Body() dto: CreateAppointmentDto, @Request() req) {
-    const role = req.user.role;
-    return this.appointmentService.create(role, dto);
+  create(@Body() dto: CreateAppointmentDto) {
+    return this.appointmentService.create(dto);
   }
 
   @Get('all')
@@ -35,7 +37,7 @@ export class AppointmentServiceController {
 
   @Get(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
-  findOne(@Param('id') id: string) {
+  findById(@Param('id') id: string) {
     return this.appointmentService.findById(id);
   }
 
@@ -51,10 +53,22 @@ export class AppointmentServiceController {
     return this.appointmentService.update(id, dto);
   }
 
-  @Patch(':id')
+  @Patch('approve/:id')
   @AuthUtils([Role.Admin], 'access')
-  approve(@Param('id') id: string) {
+  approveService(@Param('id') id: string) {
     return this.appointmentService.approveService(id);
+  }
+
+  @Patch('reject/:id')
+  @AuthUtils([Role.Admin], 'access')
+  rejectService(@Param('id') id: string) {
+    return this.appointmentService.rejectService(id);
+  }
+
+  @Patch('complete/:id')
+  @AuthUtils([Role.Admin], 'access')
+  completeService(@Param('id') id: string) {
+    return this.appointmentService.completeService(id);
   }
 
   @Delete(':id')

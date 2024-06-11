@@ -2,11 +2,13 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { DatabaseService } from 'src/database/database.service';
 import { getRegisteredServiceName } from 'src/common/decorator/service.decorator';
-import { CreateDto } from '../dto/create/Create-Base.dto';
-import { UpdateDto } from '../dto/update/Update-Base.dto';
+import { CreateDto } from 'src/service/dto/create/Create-Base.dto';
+import { UpdateDto } from 'src/service/dto/update/Update-Base.dto';
+import { ServiceStatus } from 'src/common/enums/service-status';
 
 /**
  * Base service providing common methods for all services (update, create, find, remove).
+
  *
  * Extended classes must provide the following methods:
  * - getModel(): any (returning the model from the database service)
@@ -47,18 +49,14 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
     });
   }
 
-  async create(role: string, dto: T1) {
-    if (role === 'user') {
-      return this.createBase(dto);
-    } else if (role === 'admin') {
-      const { petId, ...data } = dto;
-      return this.getModel().create({
-        data: {
-          ...data,
-          pet: { connect: { id: petId } },
-        },
-      });
-    }
+  async create(dto: T1) {
+    const { petId, ...data } = dto;
+    return this.getModel().create({
+      data: {
+        ...data,
+        pet: { connect: { id: petId } },
+      },
+    });
   }
 
   update(id: string, dto: T2) {
@@ -85,7 +83,21 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
   approveService(id: string) {
     return this.getModel().update({
       where: { id },
-      data: { isApproved: true },
+      data: { status: ServiceStatus.Approved },
+    });
+  }
+
+  completeService(id: string) {
+    return this.getModel().update({
+      where: { id },
+      data: { status: ServiceStatus.Completed },
+    });
+  }
+
+  rejectService(id: string) {
+    return this.getModel().update({
+      where: { id },
+      data: { status: ServiceStatus.Rejected },
     });
   }
 
@@ -140,5 +152,9 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
       }),
     );
     return results;
+  }
+
+  getPriceList() {
+    return this.databaseService.serviceDetails.findMany({});
   }
 }

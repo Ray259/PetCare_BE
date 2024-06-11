@@ -1,5 +1,5 @@
-export interface IService {
-  create(role: string, dto: any);
+export interface IServiceController {
+  create(dto: any);
   findAll(dto: any);
   findById(id: string);
   findAllByPet(id: string);
