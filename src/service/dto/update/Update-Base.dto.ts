@@ -1,11 +1,11 @@
 import {
-  IsBoolean,
   IsDateString,
   IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ServiceStatus } from 'src/common/enums/service-status';
 
 export class UpdateDto {
   @IsString()
@@ -20,7 +20,6 @@ export class UpdateDto {
   @IsOptional()
   additionalInfo?: Record<string, any>;
 
-  @IsBoolean()
   @IsOptional()
-  isApproved?: boolean;
+  status?: ServiceStatus;
 }

@@ -13,10 +13,6 @@ export class CreateAppointmentDto extends CreateDto {
   @IsOptional()
   description: string;
 
-  @IsString()
-  @IsOptional()
-  status: string;
-
   @IsBoolean()
   @IsOptional()
   followUp?: boolean;

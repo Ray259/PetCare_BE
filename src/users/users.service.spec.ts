@@ -4,6 +4,12 @@ import { DatabaseService } from '../database/database.service';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 
+// Mock the bcrypt hash function
+jest.mock('bcrypt', () => ({
+  ...jest.requireActual('bcrypt'),
+  hash: jest.fn(),
+}));
+
 const mockDatabaseService = {
   user: {
     create: jest.fn(),
@@ -54,7 +60,8 @@ describe('UsersService', () => {
       mockDatabaseService.user.create.mockResolvedValue({
         email: 'test@example.com',
       });
-      jest.spyOn(bcrypt, 'hash').mockResolvedValue('hashedpassword');
+      // Mock the bcrypt.hash function to return 'hashedpassword'
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
 
       const dto: Prisma.UserCreateInput = {
         email: 'test@example.com',

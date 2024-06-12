@@ -13,14 +13,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PetsModule } from './pets/pets.module';
-import { HealthcareServiceModule } from './service/healthcare/healthcare.module';
-import { GroomingServiceModule } from './service/grooming/grooming.module';
-import { AppointmentServiceModule } from './service/appointment/appointment.module';
-import { BoardingServiceModule } from './service/boarding/boarding.module';
 import { BaseServiceController } from './service/Base/BaseService.controller';
 import { BaseServiceModule } from './service/Base/BaseService.module';
 import { MedicineModule } from './medicine/medicine.module';
 import { RevenueModule } from './revenue/revenue.module';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -32,10 +29,7 @@ import { RevenueModule } from './revenue/revenue.module';
     DatabaseModule,
     UsersModule,
     PetsModule,
-    HealthcareServiceModule,
-    GroomingServiceModule,
-    AppointmentServiceModule,
-    BoardingServiceModule,
+    ServiceModule,
     AuthModule,
     RedisModule,
     NotificationModule,

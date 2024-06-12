@@ -9,10 +9,6 @@ export class UpdateAppointmentDto extends CreateDto {
   @IsNotEmpty()
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  status: string;
-
   @IsBoolean()
   @IsOptional()
   followUp?: boolean;
