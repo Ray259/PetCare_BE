@@ -20,6 +20,7 @@ import { BoardingServiceModule } from './service/boarding/boarding.module';
 import { BaseServiceController } from './service/Base/BaseService.controller';
 import { BaseServiceModule } from './service/Base/BaseService.module';
 import { MedicineModule } from './medicine/medicine.module';
+import { RevenueModule } from './revenue/revenue.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MedicineModule } from './medicine/medicine.module';
     NotificationModule,
     MedicineModule,
     BaseServiceModule,
+    RevenueModule,
   ],
   controllers: [AppController, BaseServiceController],
   providers: [AppService, GoogleStrategy, NotificationService],

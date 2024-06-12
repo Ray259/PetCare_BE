@@ -32,6 +32,12 @@ export class BoardingServiceController
     return this.boardingService.create(dto);
   }
 
+  @Post('create-base')
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  createBase(@Body() dto: CreateBoardingServiceDto) {
+    return this.boardingService.createBase(dto);
+  }
+
   @Get('all')
   @AuthUtils([Role.Admin], 'access')
   findAll() {

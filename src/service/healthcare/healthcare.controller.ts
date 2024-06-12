@@ -38,6 +38,12 @@ export class HealthcareController
     return this.healthcareService.create(dto);
   }
 
+  @Post('create-base')
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  createBase(@Body() dto: CreateHealthcareServiceDto) {
+    return this.healthcareService.createBase(dto);
+  }
+
   @Get('all')
   @AuthUtils([Role.Admin], 'access')
   findAll() {

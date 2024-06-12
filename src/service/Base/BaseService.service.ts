@@ -5,14 +5,22 @@ import { getRegisteredServiceName } from 'src/common/decorator/service.decorator
 import { CreateDto } from 'src/service/dto/create/Create-Base.dto';
 import { UpdateDto } from 'src/service/dto/update/Update-Base.dto';
 import { ServiceStatus } from 'src/common/enums/service-status';
+import { RevenueService } from 'src/revenue/revenue.service';
 
 /**
- * Base service providing common methods for all services (update, create, find, remove).
-
+ * Base service class providing common methods for all service classes
+ * (create, update, find, remove, etc.).
  *
- * Extended classes must provide the following methods:
- * - getModel(): any (returning the model from the database service)
- * - getServiceName(): string (returning the service name)
+ * Service classes extending BaseService must implement the following methods:
+ * - getModel(): any - Returns the model from the database service.
+ * - getServiceName(): string - Returns the name of the service.
+ * - getServiceEndpoint(): string - Returns the api endpoint of the service.
+ *
+ * @param T1 - The create DTO type.
+ * @param T2 - The update DTO type.
+ *
+ *
+ * @RegisterService  Extending classes also should implement the decorator in order to be included in certain service-related operations.
  */
 @Injectable()
 export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
@@ -22,6 +30,7 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
 
   constructor(
     protected readonly databaseService: DatabaseService,
+    protected readonly revenueService: RevenueService,
     @Inject(DiscoveryService)
     protected readonly discoveryService: DiscoveryService,
   ) {}
@@ -44,8 +53,12 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
   protected abstract getServiceName(): string;
 
   createBase(dto: CreateDto) {
+    const { petId, ...data } = dto;
     return this.getModel().create({
-      data: { petId: dto.petId, date: dto.date },
+      data: {
+        ...data,
+        pet: { connect: { id: petId } },
+      },
     });
   }
 
@@ -87,7 +100,19 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
     });
   }
 
-  completeService(id: string) {
+  async completeService(id: string) {
+    const serviceName = this.getServiceName();
+    const s = await this.databaseService.serviceDetails.findUnique({
+      where: {
+        serviceName,
+      },
+      select: {
+        price: true,
+      },
+    });
+    console.log(s, s.price);
+    const a = await this.revenueService.update(serviceName, s.price);
+    console.log(a);
     return this.getModel().update({
       where: { id },
       data: { status: ServiceStatus.Completed },
@@ -154,7 +179,7 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
     return results;
   }
 
-  getPriceList() {
+  getServiceDetails() {
     return this.databaseService.serviceDetails.findMany({});
   }
 }

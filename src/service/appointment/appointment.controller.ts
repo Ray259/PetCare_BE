@@ -15,6 +15,7 @@ import { UpdateAppointmentDto } from 'src/service/dto/update/update-appointment.
 import { ApiTags } from '@nestjs/swagger';
 import { IServiceController } from 'src/service/Base/IServiceController';
 import { IServiceApproval } from 'src/service/Base/IServiceApproval';
+import { CreateDto } from '../dto/create/Create-Base.dto';
 
 @Controller('appointment-service')
 @ApiTags('Appointments')
@@ -24,9 +25,15 @@ export class AppointmentServiceController
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Post()
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin], 'access')
   create(@Body() dto: CreateAppointmentDto) {
     return this.appointmentService.create(dto);
+  }
+
+  @Post('create-base')
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  createBase(@Body() dto: CreateDto) {
+    return this.appointmentService.createBase(dto);
   }
 
   @Get('all')

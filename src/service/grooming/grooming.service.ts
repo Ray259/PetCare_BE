@@ -4,6 +4,7 @@ import { BaseService } from 'src/service/Base/BaseService.service';
 import { DiscoveryService } from '@nestjs/core';
 import { RegisterService } from 'src/common/decorator/service.decorator';
 import { CreateGroomingServiceDto } from 'src/service/dto/create/create-grooming-service.dto';
+import { RevenueService } from 'src/revenue/revenue.service';
 
 const SERVICE_NAME = 'Grooming Service';
 
@@ -15,10 +16,11 @@ export class GroomingService extends BaseService<
 > {
   constructor(
     protected readonly databaseService: DatabaseService,
+    protected readonly revenueService: RevenueService,
     @Inject(DiscoveryService)
     protected readonly discoveryService: DiscoveryService,
   ) {
-    super(databaseService, discoveryService);
+    super(databaseService, revenueService, discoveryService);
   }
   private readonly serviceName: string = SERVICE_NAME;
   protected getModel() {

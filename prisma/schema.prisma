@@ -57,17 +57,18 @@ model Pet {
 
 model ServiceDetails {
   id String @default(uuid()) @id
-  name String @unique
+  serviceName String @unique
   description String? @db.Text
   price Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  healthcareServices HealthcareService[]
-  groomingServices GroomingService[]
-  boardingServices BoardingService[]
-  appointments Appointments[]
 }
 
+model Revenue {
+  id String @default(uuid()) @id
+  serviceName String
+  date DateTime
+  total Float
+  updatedAt DateTime @default(now())
+}
 
 enum status {
   pending
@@ -79,7 +80,6 @@ enum status {
 model HealthcareService {
   id String @default(uuid()) @id
   petId String
-  serviceTypeId String
   description String? @db.Text
   temperature Float?
   heartRate Int?
@@ -95,9 +95,7 @@ model HealthcareService {
   date DateTime
   medicine String[]
   additionalInfo Json?
-  serviceType ServiceDetails @relation(fields: [serviceTypeId], references: [id])
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
-  isApproved Boolean? @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   status status? @default(pending)
@@ -107,12 +105,9 @@ model HealthcareService {
 model GroomingService {
   id String @default(uuid()) @id
   petId String
-  serviceTypeId String
   date DateTime
   additionalInfo Json?
-  serviceType ServiceDetails @relation(fields: [serviceTypeId], references: [id])
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
-  isApproved Boolean? @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   status status? @default(pending)
@@ -122,13 +117,10 @@ model GroomingService {
 model BoardingService {
   id String @default(uuid()) @id
   petId String
-  serviceTypeId String
   cage Int?
   address String?
   date DateTime
   additionalInfo Json?
-  isApproved Boolean? @default(false)
-  serviceType ServiceDetails @relation(fields: [serviceTypeId], references: [id])
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -139,14 +131,12 @@ model BoardingService {
 model Appointments {
   id String @default(uuid()) @id
   petId String
-  serviceTypeId String
+
   doctor String?
   description String? @db.Text
   followUp Boolean @default(false)
   date DateTime
   additionalInfo Json?
-  isApproved Boolean? @default(false)
-  serviceType ServiceDetails @relation(fields: [serviceTypeId], references: [id])
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

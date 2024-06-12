@@ -29,6 +29,12 @@ export class GroomingServiceController
     return this.groomingService.create(dto);
   }
 
+  @Post('create-base')
+  @AuthUtils([Role.Admin, Role.User], 'access')
+  createBase(@Body() dto: CreateGroomingServiceDto) {
+    return this.groomingService.createBase(dto);
+  }
+
   @Get('all')
   @AuthUtils([Role.Admin], 'access')
   findAll() {
