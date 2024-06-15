@@ -32,6 +32,36 @@ export class RevenueService {
     });
   }
 
+  async getYesterdayGrowth(serviceName?: string) {
+    serviceName = this.formatServiceName(serviceName);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const todayRevenue = await this.getCurrentRevenue(serviceName);
+    const yesterdayRevenue = await this.databaseService.revenue.findFirst({
+      where:
+        serviceName === 'all'
+          ? {
+              date: {
+                equals: yesterday,
+              },
+            }
+          : {
+              serviceName: { equals: serviceName, mode: 'insensitive' },
+              date: {
+                equals: yesterday,
+              },
+            },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+    if (!yesterdayRevenue) {
+      return todayRevenue.total;
+    }
+    return todayRevenue.total - yesterdayRevenue.total;
+  }
+
   async update(serviceName: string, volume: any) {
     const r = await this.getCurrentRevenue(serviceName);
     const today = new Date();
@@ -66,5 +96,11 @@ export class RevenueService {
       date1.getMonth() === date2.getMonth() &&
       date1.getFullYear() === date2.getFullYear()
     );
+  }
+
+  private isYesterday(today: Date, date: Date): boolean {
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    return this.isSameDay(date, yesterday);
   }
 }

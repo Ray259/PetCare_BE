@@ -120,7 +120,6 @@ model BoardingService {
   cage Int?
   address String?
   date DateTime
-  endDate DateTime?
   additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

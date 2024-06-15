@@ -16,4 +16,9 @@ export class RevenueController {
   findAll(@Param('serviceName') serviceName: string) {
     return this.revenueService.findAllRecords(serviceName);
   }
+
+  @Get('growth/:serviceName')
+  getYesterdayGrowth(@Param('serviceName') serviceName: string) {
+    return this.revenueService.getYesterdayGrowth(serviceName);
+  }
 }

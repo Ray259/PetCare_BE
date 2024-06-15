@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
 import * as bcrypt from 'bcrypt';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +22,10 @@ export class UsersService {
 
   count() {
     return this.databaseService.user.count();
+  }
+
+  countClient() {
+    return this.databaseService.user.count({ where: { role: Role.User } });
   }
 
   findById(id: string) {

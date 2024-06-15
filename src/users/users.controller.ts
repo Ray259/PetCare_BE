@@ -32,6 +32,12 @@ export class UsersController {
     return this.usersService.count();
   }
 
+  @Get('client-number')
+  @AuthUtils([Role.Admin], 'access')
+  countClient() {
+    return this.usersService.countClient();
+  }
+
   @Get()
   @AuthUtils([Role.Admin, Role.User], 'access')
   @UseInterceptors(UserInterceptor)
