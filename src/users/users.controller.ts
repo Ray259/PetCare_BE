@@ -26,6 +26,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('number')
+  @AuthUtils([Role.Admin], 'access')
+  count() {
+    return this.usersService.count();
+  }
+
   @Get()
   @AuthUtils([Role.Admin, Role.User], 'access')
   @UseInterceptors(UserInterceptor)

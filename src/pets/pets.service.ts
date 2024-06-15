@@ -38,6 +38,10 @@ export class PetsService {
     });
   }
 
+  count() {
+    return this.databaseService.pet.count();
+  }
+
   findById(id: string) {
     return this.databaseService.pet.findUnique({
       where: { id },

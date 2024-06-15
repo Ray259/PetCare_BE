@@ -34,6 +34,12 @@ export class PetsController {
     return this.petsService.findAll();
   }
 
+  @Get('count')
+  @AuthUtils([Role.Admin], 'access')
+  count() {
+    return this.petsService.count();
+  }
+
   @Get(':id')
   @AuthUtils([Role.Admin, Role.User], 'access')
   findOne(@Param('id') id: string) {

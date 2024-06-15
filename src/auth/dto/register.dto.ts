@@ -4,7 +4,7 @@ import { Role } from 'src/common/enums/role.enum';
 import { ApplyToAllProperties } from 'src/utils/decorator/apply-to-all-properties.decorator';
 
 @ApplyToAllProperties(ApiProperty)
-export class CreateUserDto {
+export class RegisterDto {
   email: string;
   username: string;
   password?: string | null;

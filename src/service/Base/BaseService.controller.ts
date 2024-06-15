@@ -7,17 +7,16 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('services')
 @ApiTags('Base service')
 export class BaseServiceController extends BaseService<any, any> {
-  protected getModel() {
-    return 'Base Service';
-  }
-  protected getServiceName(): string {
-    return 'Base Service';
-  }
-
   @Get('all-registered-services/pet')
   @AuthUtils([Role.Admin, Role.User], 'access')
   async findByPet(@Query('id') id: string) {
-    return this.findRegisteredServices(id);
+    return this.findRegisteredServicesByPet(id);
+  }
+
+  @Get('all-registered-services-number')
+  @AuthUtils([Role.Admin], 'access')
+  async findRegisteredServicesNumber() {
+    return this.countAllRegisteredServices();
   }
 
   @Get('all-registered-services')
@@ -28,6 +27,18 @@ export class BaseServiceController extends BaseService<any, any> {
 
   @Get('our-services')
   ourService() {
+    return this.getListAllService();
+  }
+
+  @Get('service-details')
+  serviceDetails() {
     return this.getServiceDetails();
+  }
+
+  protected getModel() {
+    return this;
+  }
+  protected getServiceName(): string {
+    return 'Base Service';
   }
 }

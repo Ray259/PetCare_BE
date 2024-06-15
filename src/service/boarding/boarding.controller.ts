@@ -15,8 +15,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateBoardingServiceDto } from 'src/service/dto/create/create-boarding-service.dto';
 import { UpdateBoardingServiceDto } from 'src/service/dto/update/update-boarding-service.dto';
 import { BoardingInterceptor } from './boarding.interceptor';
-import { IServiceApproval } from 'src/service/Base/IServiceApproval';
-import { IServiceController } from 'src/service/Base/IServiceController';
+import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
+import { IServiceController } from 'src/service/Interfaces/IServiceController';
 
 @Controller('boarding-service')
 @ApiTags('Boarding Service')

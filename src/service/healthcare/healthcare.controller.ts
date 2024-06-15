@@ -20,8 +20,8 @@ import {
 } from './healthcare.interceptor';
 import { RequestType } from 'src/common/enums/request-type.enum';
 import { RequestTypes } from 'src/common/decorator/request-type.decorator';
-import { IServiceApproval } from 'src/service/Base/IServiceApproval';
-import { IServiceController } from 'src/service/Base/IServiceController';
+import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
+import { IServiceController } from 'src/service/Interfaces/IServiceController';
 
 @Controller('healthcare-service')
 @ApiTags('Healthcare service')

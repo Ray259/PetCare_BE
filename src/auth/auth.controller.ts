@@ -13,7 +13,7 @@ import { Response } from 'express';
 import { GoogleOauthGuard } from './Guard/google-oauth.guard';
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { Role } from 'src/common/enums/role.enum';
-import { CreateUserDto } from './dto/create-user.dto';
+import { RegisterDto } from './dto/register.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
@@ -22,7 +22,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  create(@Body() dto: CreateUserDto) {
+  create(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
 

@@ -130,6 +130,21 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
     return this.getModel().findMany({});
   }
 
+  count() {
+    return this.getModel().count();
+  }
+
+  async countAllRegisteredServices() {
+    let count = 0;
+    await Promise.all(
+      this.registeredServices.map(async (service) => {
+        const serviceCount = await service.model.count();
+        count += serviceCount;
+      }),
+    );
+    return count;
+  }
+
   remove(id: string) {
     return this.getModel().delete({ where: { id } });
   }
@@ -140,7 +155,7 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
     });
   }
 
-  async findRegisteredServices(id: string) {
+  async findRegisteredServicesByPet(id: string) {
     const results = await Promise.all(
       this.registeredServices.map(async (service) => {
         const services = await service.model.findMany({

@@ -13,8 +13,8 @@ import { CreateAppointmentDto } from 'src/service/dto/create/create-appointment.
 import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { UpdateAppointmentDto } from 'src/service/dto/update/update-appointment.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { IServiceController } from 'src/service/Base/IServiceController';
-import { IServiceApproval } from 'src/service/Base/IServiceApproval';
+import { IServiceController } from 'src/service/Interfaces/IServiceController';
+import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
 import { CreateDto } from '../dto/create/Create-Base.dto';
 
 @Controller('appointment-service')

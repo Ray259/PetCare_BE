@@ -13,8 +13,8 @@ import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateGroomingServiceDto } from 'src/service/dto/create/create-grooming-service.dto';
 import { UpdateGroomingServiceDto } from 'src/service/dto/update/update-grooming-service.dto';
-import { IServiceController } from 'src/service/Base/IServiceController';
-import { IServiceApproval } from 'src/service/Base/IServiceApproval';
+import { IServiceController } from 'src/service/Interfaces/IServiceController';
+import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
 
 @Controller('grooming-service')
 @ApiTags('Grooming Service')

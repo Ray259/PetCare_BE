@@ -19,6 +19,10 @@ export class UsersService {
     return this.databaseService.user.findMany({});
   }
 
+  count() {
+    return this.databaseService.user.count();
+  }
+
   findById(id: string) {
     return this.databaseService.user.findUnique({ where: { id } });
   }
