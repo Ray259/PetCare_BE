@@ -72,7 +72,10 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
     });
   }
 
-  update(id: string, dto: T2) {
+  async update(id: string, dto: T2) {
+    if (dto.status === ServiceStatus.Completed) {
+      await this.completeService(id);
+    }
     return this.getModel().update({
       where: {
         id,

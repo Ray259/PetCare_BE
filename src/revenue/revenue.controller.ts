@@ -19,6 +19,9 @@ export class RevenueController {
 
   @Get('growth/:serviceName')
   getYesterdayGrowth(@Param('serviceName') serviceName: string) {
+    if (serviceName === 'all' || !serviceName) {
+      return this.revenueService.getYesterdayTotalGrowth();
+    }
     return this.revenueService.getYesterdayGrowth(serviceName);
   }
 }

@@ -8,7 +8,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Base service')
 export class BaseServiceController extends BaseService<any, any> {
   @Get('all-registered-services/pet')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   async findByPet(@Query('id') id: string) {
     return this.findRegisteredServicesByPet(id);
   }

@@ -33,13 +33,13 @@ export class HealthcareController
   @Post()
   @RequestTypes(RequestType.Create)
   @UseInterceptors(CreateOrUpdateHealthcareMedicineInterceptor)
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   async create(@Body() dto: CreateHealthcareServiceDto) {
     return this.healthcareService.create(dto);
   }
 
   @Post('create-base')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   createBase(@Body() dto: CreateHealthcareServiceDto) {
     return this.healthcareService.createBase(dto);
   }
@@ -52,13 +52,13 @@ export class HealthcareController
 
   @Get(':id')
   @UseInterceptors(GetHealthcareMedicineInterceptor)
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findById(@Param('id') id: string) {
     return this.healthcareService.findById(id);
   }
 
   @Get('all/pet=:id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findAllByPet(@Param('id') id: string) {
     return this.healthcareService.findAllByPet(id);
   }
@@ -66,7 +66,7 @@ export class HealthcareController
   @Patch(':id')
   @RequestTypes(RequestType.Update)
   @UseInterceptors(CreateOrUpdateHealthcareMedicineInterceptor)
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateHealthcareServiceDto) {
     return this.healthcareService.update(id, dto);
   }
@@ -90,7 +90,7 @@ export class HealthcareController
   }
 
   @Delete(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   remove(@Param('id') id: string) {
     return this.healthcareService.remove(id);
   }

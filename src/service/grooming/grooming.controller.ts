@@ -24,13 +24,13 @@ export class GroomingServiceController
   constructor(private readonly groomingService: GroomingService) {}
 
   @Post()
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   create(@Body() dto: CreateGroomingServiceDto) {
     return this.groomingService.create(dto);
   }
 
   @Post('create-base')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   createBase(@Body() dto: CreateGroomingServiceDto) {
     return this.groomingService.createBase(dto);
   }
@@ -42,19 +42,19 @@ export class GroomingServiceController
   }
 
   @Get(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findById(@Param('id') id: string) {
     return this.groomingService.findById(id);
   }
 
   @Get('all/pet=:id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findAllByPet(@Param('id') id: string) {
     return this.groomingService.findAllByPet(id);
   }
 
   @Patch(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateGroomingServiceDto) {
     return this.groomingService.update(id, dto);
   }
@@ -78,7 +78,7 @@ export class GroomingServiceController
   }
 
   @Delete(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   remove(@Param('id') id: string) {
     return this.groomingService.remove(id);
   }

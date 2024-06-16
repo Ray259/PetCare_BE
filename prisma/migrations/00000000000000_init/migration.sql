@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('user', 'admin');
+CREATE TYPE "Role" AS ENUM ('client', 'admin', 'staff', 'doctor');
 
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('male', 'female');
@@ -14,7 +14,7 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL,
     "password" TEXT,
     "phone" TEXT,
-    "role" "Role" NOT NULL DEFAULT 'user',
+    "role" "Role" NOT NULL DEFAULT 'client',
     "avatar" TEXT,
     "gender" "Gender",
     "refreshToken" TEXT[],
@@ -51,7 +51,7 @@ CREATE TABLE "ServiceDetails" (
 -- CreateTable
 CREATE TABLE "Revenue" (
     "id" TEXT NOT NULL,
-    "serviceName" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "total" DOUBLE PRECISION NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -63,6 +63,8 @@ CREATE TABLE "Revenue" (
 CREATE TABLE "HealthcareService" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
+    "doctorId" TEXT,
     "description" TEXT,
     "temperature" DOUBLE PRECISION,
     "heartRate" INTEGER,
@@ -77,6 +79,7 @@ CREATE TABLE "HealthcareService" (
     "diet" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
     "medicine" TEXT[],
+    "treatmentRegimen" JSONB,
     "additionalInfo" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -90,6 +93,8 @@ CREATE TABLE "HealthcareService" (
 CREATE TABLE "GroomingService" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
+    "staffId" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
     "additionalInfo" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -104,6 +109,7 @@ CREATE TABLE "GroomingService" (
 CREATE TABLE "BoardingService" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
     "cage" INTEGER,
     "address" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
@@ -120,7 +126,8 @@ CREATE TABLE "BoardingService" (
 CREATE TABLE "Appointments" (
     "id" TEXT NOT NULL,
     "petId" TEXT NOT NULL,
-    "doctor" TEXT,
+    "serviceId" TEXT NOT NULL,
+    "doctorId" TEXT,
     "description" TEXT,
     "followUp" BOOLEAN NOT NULL DEFAULT false,
     "date" TIMESTAMP(3) NOT NULL,
@@ -166,16 +173,40 @@ CREATE UNIQUE INDEX "ServiceDetails_serviceName_key" ON "ServiceDetails"("servic
 ALTER TABLE "Pet" ADD CONSTRAINT "Pet_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Revenue" ADD CONSTRAINT "Revenue_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "ServiceDetails"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HealthcareService" ADD CONSTRAINT "HealthcareService_doctorId_fkey" FOREIGN KEY ("doctorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HealthcareService" ADD CONSTRAINT "HealthcareService_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "ServiceDetails"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "HealthcareService" ADD CONSTRAINT "HealthcareService_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "GroomingService" ADD CONSTRAINT "GroomingService_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "GroomingService" ADD CONSTRAINT "GroomingService_staffId_fkey" FOREIGN KEY ("staffId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "GroomingService" ADD CONSTRAINT "GroomingService_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "ServiceDetails"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "BoardingService" ADD CONSTRAINT "BoardingService_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "BoardingService" ADD CONSTRAINT "BoardingService_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "ServiceDetails"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Appointments" ADD CONSTRAINT "Appointments_doctorId_fkey" FOREIGN KEY ("doctorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Appointments" ADD CONSTRAINT "Appointments_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Appointments" ADD CONSTRAINT "Appointments_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "ServiceDetails"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

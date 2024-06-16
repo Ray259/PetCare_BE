@@ -39,7 +39,7 @@ export class AuthController {
   }
 
   @Get('refresh')
-  @AuthUtils([Role.Admin, Role.User], 'refresh')
+  @AuthUtils([Role.Admin, Role.Client], 'refresh')
   async refreshToken(@Request() req) {
     const user = req.user;
     const tokens = await this.authService.refresh(user.id, user.refreshToken);
@@ -47,13 +47,13 @@ export class AuthController {
   }
 
   @Get('logout')
-  @AuthUtils([Role.Admin, Role.User], 'refresh')
+  @AuthUtils([Role.Admin, Role.Client], 'refresh')
   logout(@Request() req) {
     const user = req.user;
     return this.authService.logout(user.id, user.refreshToken);
   }
 
-  @AuthUtils([Role.Admin, Role.User], 'refresh')
+  @AuthUtils([Role.Admin, Role.Client], 'refresh')
   logoutAll(@Request() req) {
     const user = req.user;
     return this.authService.logoutAll(user.id);

@@ -19,17 +19,22 @@ model User {
   username String
   password String?
   phone String?
-  role Role @default(user)
+  role Role @default(client)
   avatar String?
   gender Gender?
   pet Pet[]
+  staff GroomingService[]
   notification Notification[]
+  healthcareDoctor HealthcareService[]
+  appointmentDoctor Appointments[]
   refreshToken String[]
 }
 
 enum Role {
-  user
+  client
   admin
+  staff
+  doctor
 }
 
 enum Gender {
@@ -60,11 +65,17 @@ model ServiceDetails {
   serviceName String @unique
   description String? @db.Text
   price Float
+  revenue Revenue[]
+  healthcareServices HealthcareService[]
+  groomingServices GroomingService[]
+  boardingServices BoardingService[]
+  appointments Appointments[]
 }
 
 model Revenue {
   id String @default(uuid()) @id
-  serviceName String
+  serviceId String
+  service ServiceDetails @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   date DateTime
   total Float
   updatedAt DateTime @default(now())
@@ -80,6 +91,8 @@ enum status {
 model HealthcareService {
   id String @default(uuid()) @id
   petId String
+  serviceId String
+  doctorId String?
   description String? @db.Text
   temperature Float?
   heartRate Int?
@@ -94,7 +107,10 @@ model HealthcareService {
   diet String? @db.Text
   date DateTime
   medicine String[]
+  treatmentRegimen Json?
   additionalInfo Json?
+  doctor User? @relation(fields: [doctorId], references: [id])
+  service ServiceDetails @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -105,9 +121,13 @@ model HealthcareService {
 model GroomingService {
   id String @default(uuid()) @id
   petId String
+  serviceId String
+  staffId String?
   date DateTime
   additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  staff User? @relation(fields: [staffId], references: [id])
+  service ServiceDetails @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   status status? @default(pending)
@@ -117,11 +137,13 @@ model GroomingService {
 model BoardingService {
   id String @default(uuid()) @id
   petId String
+  serviceId String
   cage Int?
   address String?
   date DateTime
   additionalInfo Json?
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  service ServiceDetails @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   status status? @default(pending)
@@ -131,13 +153,15 @@ model BoardingService {
 model Appointments {
   id String @default(uuid()) @id
   petId String
-
-  doctor String?
+  serviceId String
+  doctorId String?
   description String? @db.Text
   followUp Boolean @default(false)
   date DateTime
   additionalInfo Json?
+  doctor User? @relation(fields: [doctorId], references: [id])
   pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  service ServiceDetails @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   status status? @default(pending)

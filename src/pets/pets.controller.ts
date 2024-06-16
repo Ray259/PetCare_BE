@@ -22,7 +22,7 @@ export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
   @Post()
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   @UseInterceptors(PetInterceptor)
   create(@Body() createPetDto: CreatePetDto) {
     return this.petsService.create(createPetDto);
@@ -41,25 +41,25 @@ export class PetsController {
   }
 
   @Get(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findOne(@Param('id') id: string) {
     return this.petsService.findById(id);
   }
 
   @Get('all/owner=:id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findAllByUser(@Param('id') id: string) {
     return this.petsService.findAllByUser(id);
   }
 
   @Patch(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() updatePetDto: Prisma.PetUpdateInput) {
     return this.petsService.update(id, updatePetDto);
   }
 
   @Delete(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   remove(@Param('id') id: string) {
     return this.petsService.remove(id);
   }

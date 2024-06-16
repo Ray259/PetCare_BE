@@ -31,7 +31,7 @@ export class AppointmentServiceController
   }
 
   @Post('create-base')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   createBase(@Body() dto: CreateDto) {
     return this.appointmentService.createBase(dto);
   }
@@ -43,19 +43,19 @@ export class AppointmentServiceController
   }
 
   @Get(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findById(@Param('id') id: string) {
     return this.appointmentService.findById(id);
   }
 
   @Get('all/pet=:id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findAllByPet(@Param('id') id: string) {
     return this.appointmentService.findAllByPet(id);
   }
 
   @Patch(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
     return this.appointmentService.update(id, dto);
   }
@@ -79,7 +79,7 @@ export class AppointmentServiceController
   }
 
   @Delete(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(id);
   }

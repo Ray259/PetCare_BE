@@ -25,7 +25,7 @@ export class UsersService {
   }
 
   countClient() {
-    return this.databaseService.user.count({ where: { role: Role.User } });
+    return this.databaseService.user.count({ where: { role: Role.Client } });
   }
 
   findById(id: string) {

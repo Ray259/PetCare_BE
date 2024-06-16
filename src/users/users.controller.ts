@@ -39,7 +39,7 @@ export class UsersController {
   }
 
   @Get()
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   @UseInterceptors(UserInterceptor)
   find(@Request() req) {
     const id = req.user.id;
@@ -47,7 +47,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   @UseInterceptors(UserInterceptor)
   findById(@Request() req, @Param('id') id: string) {
     // const requestId = req.user.id;
@@ -56,13 +56,13 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto);
   }
 
   @Delete(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

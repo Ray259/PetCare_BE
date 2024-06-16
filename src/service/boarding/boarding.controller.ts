@@ -26,14 +26,14 @@ export class BoardingServiceController
   constructor(private readonly boardingService: BoardingService) {}
 
   @Post()
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   @UseInterceptors(BoardingInterceptor)
   create(@Body() dto: CreateBoardingServiceDto) {
     return this.boardingService.create(dto);
   }
 
   @Post('create-base')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   createBase(@Body() dto: CreateBoardingServiceDto) {
     return this.boardingService.createBase(dto);
   }
@@ -45,19 +45,19 @@ export class BoardingServiceController
   }
 
   @Get(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findById(@Param('id') id: string) {
     return this.boardingService.findById(id);
   }
 
   @Get('all/pet=:id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   findAllByPet(@Param('id') id: string) {
     return this.boardingService.findAllByPet(id);
   }
 
   @Patch(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() dto: UpdateBoardingServiceDto) {
     return this.boardingService.update(id, dto);
   }
@@ -81,7 +81,7 @@ export class BoardingServiceController
   }
 
   @Delete(':id')
-  @AuthUtils([Role.Admin, Role.User], 'access')
+  @AuthUtils([Role.Admin, Role.Client], 'access')
   remove(@Param('id') id: string) {
     return this.boardingService.remove(id);
   }
