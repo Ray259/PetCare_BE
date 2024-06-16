@@ -35,6 +35,12 @@ export class GroomingServiceController
     return this.groomingService.createBase(dto);
   }
 
+  @Get('count')
+  @AuthUtils([Role.Admin], 'access')
+  count() {
+    return this.groomingService.count();
+  }
+
   @Get('all')
   @AuthUtils([Role.Admin], 'access')
   findAll() {

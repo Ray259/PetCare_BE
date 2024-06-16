@@ -36,6 +36,12 @@ export class AppointmentServiceController
     return this.appointmentService.createBase(dto);
   }
 
+  @Get('count')
+  @AuthUtils([Role.Admin], 'access')
+  count() {
+    return this.appointmentService.count();
+  }
+
   @Get('all')
   @AuthUtils([Role.Admin], 'access')
   findAll() {

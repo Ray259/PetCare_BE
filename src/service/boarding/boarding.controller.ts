@@ -44,9 +44,17 @@ export class BoardingServiceController
     return this.boardingService.findAll();
   }
 
+  @Get('count')
+  @AuthUtils([Role.Admin], 'access')
+  count() {
+    console.log('count');
+    return this.boardingService.count();
+  }
+
   @Get(':id')
   @AuthUtils([Role.Admin, Role.Client], 'access')
   findById(@Param('id') id: string) {
+    console.log('find by id');
     return this.boardingService.findById(id);
   }
 

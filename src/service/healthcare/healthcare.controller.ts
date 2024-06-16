@@ -50,6 +50,12 @@ export class HealthcareController
     return this.healthcareService.findAll();
   }
 
+  @Get('count')
+  @AuthUtils([Role.Admin], 'access')
+  count() {
+    return this.healthcareService.count();
+  }
+
   @Get(':id')
   @UseInterceptors(GetHealthcareMedicineInterceptor)
   @AuthUtils([Role.Admin, Role.Client], 'access')
