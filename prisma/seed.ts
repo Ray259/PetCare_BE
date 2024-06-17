@@ -116,37 +116,38 @@ async function main() {
     const service = await prisma.serviceDetails.findUnique({
       where: { serviceName },
     });
-
-    const existingRevenue = await prisma.revenue.findFirst({
-      where: {
-        serviceId: service.id,
-        date,
-      },
-    });
-
-    if (existingRevenue) {
-      await prisma.revenue.update({
+    if (service) {
+      const existingRevenue = await prisma.revenue.findFirst({
         where: {
-          id: existingRevenue.id,
-        },
-        data: {
-          total: {
-            increment: service.price,
-          },
-          updatedAt: date,
-        },
-      });
-      console.log(`Updated revenue for ${serviceName} on ${date}`);
-    } else {
-      await prisma.revenue.create({
-        data: {
           serviceId: service.id,
           date,
-          total: service.price,
-          updatedAt: date,
         },
       });
-      console.log(`Added revenue for ${serviceName} on ${date}`);
+
+      if (existingRevenue) {
+        await prisma.revenue.update({
+          where: {
+            id: existingRevenue.id,
+          },
+          data: {
+            total: {
+              increment: service.price,
+            },
+            updatedAt: date,
+          },
+        });
+        console.log(`Updated revenue for ${serviceName} on ${date}`);
+      } else {
+        await prisma.revenue.create({
+          data: {
+            serviceId: service.id,
+            date,
+            total: service.price,
+            updatedAt: date,
+          },
+        });
+        console.log(`Added revenue for ${serviceName} on ${date}`);
+      }
     }
   };
 
