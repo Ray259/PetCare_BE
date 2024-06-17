@@ -17,6 +17,7 @@ import { UpdateBoardingServiceDto } from 'src/service/dto/update/update-boarding
 import { BoardingInterceptor } from './boarding.interceptor';
 import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
 import { IServiceController } from 'src/service/Interfaces/IServiceController';
+import { CreateDto } from '../dto/create/Create-Base.dto';
 
 @Controller('boarding-service')
 @ApiTags('Boarding Service')
@@ -34,7 +35,7 @@ export class BoardingServiceController
 
   @Post('create-base')
   @AuthUtils([Role.Admin, Role.Client], 'access')
-  createBase(@Body() dto: CreateBoardingServiceDto) {
+  createBase(@Body() dto: CreateDto) {
     return this.boardingService.createBase(dto);
   }
 

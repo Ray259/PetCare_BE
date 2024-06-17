@@ -15,6 +15,8 @@ import { AuthUtils } from 'src/utils/decorator/auth-utils.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { RegisterDto } from './dto/register.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/Guard/jwt-auth.guard';
+import { Tokens } from 'src/common/decorator/tokens.decorator';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -39,7 +41,8 @@ export class AuthController {
   }
 
   @Get('refresh')
-  @AuthUtils([Role.Admin, Role.Client], 'refresh')
+  @UseGuards(AuthGuard)
+  @Tokens('refresh')
   async refreshToken(@Request() req) {
     const user = req.user;
     const tokens = await this.authService.refresh(user.id, user.refreshToken);

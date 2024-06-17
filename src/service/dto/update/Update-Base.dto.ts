@@ -22,4 +22,6 @@ export class UpdateDto {
 
   @IsOptional()
   status?: ServiceStatus;
+
+  serviceId: string;
 }

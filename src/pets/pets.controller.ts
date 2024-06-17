@@ -53,6 +53,7 @@ export class PetsController {
   }
 
   @Patch(':id')
+  @UseInterceptors(PetInterceptor)
   @AuthUtils([Role.Admin, Role.Client], 'access')
   update(@Param('id') id: string, @Body() updatePetDto: Prisma.PetUpdateInput) {
     return this.petsService.update(id, updatePetDto);

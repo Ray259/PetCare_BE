@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
     const token = extractHeaderTokens(request);
     // console.log('token', token);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('jwt token is required');
     }
     try {
       const t = this.reflector.get(Tokens, context.getHandler());
@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
               ? process.env.JWT_REFRESH_SECRET || 'rt-secret'
               : '',
       });
-      // console.log('payload', payload);
+      console.log('payload', payload);
       request['user'] = payload;
       if (t === 'refresh') request['user'].refreshToken = token;
     } catch (e) {

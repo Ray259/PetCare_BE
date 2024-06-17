@@ -53,21 +53,23 @@ export abstract class BaseService<T1 extends CreateDto, T2 extends UpdateDto>
   protected abstract getServiceName(): string;
 
   createBase(dto: CreateDto) {
-    const { petId, ...data } = dto;
+    const { petId, serviceId, ...data } = dto;
     return this.getModel().create({
       data: {
         ...data,
         pet: { connect: { id: petId } },
+        service: { connect: { id: serviceId } },
       },
     });
   }
 
   async create(dto: T1) {
-    const { petId, ...data } = dto;
+    const { petId, serviceId, ...data } = dto;
     return this.getModel().create({
       data: {
         ...data,
         pet: { connect: { id: petId } },
+        service: { connect: { id: serviceId } },
       },
     });
   }

@@ -15,6 +15,7 @@ import { CreateGroomingServiceDto } from 'src/service/dto/create/create-grooming
 import { UpdateGroomingServiceDto } from 'src/service/dto/update/update-grooming-service.dto';
 import { IServiceController } from 'src/service/Interfaces/IServiceController';
 import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
+import { CreateDto } from '../dto/create/Create-Base.dto';
 
 @Controller('grooming-service')
 @ApiTags('Grooming Service')
@@ -31,7 +32,7 @@ export class GroomingServiceController
 
   @Post('create-base')
   @AuthUtils([Role.Admin, Role.Client], 'access')
-  createBase(@Body() dto: CreateGroomingServiceDto) {
+  createBase(@Body() dto: CreateDto) {
     return this.groomingService.createBase(dto);
   }
 

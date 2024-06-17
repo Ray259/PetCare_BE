@@ -22,6 +22,7 @@ import { RequestType } from 'src/common/enums/request-type.enum';
 import { RequestTypes } from 'src/common/decorator/request-type.decorator';
 import { IServiceApproval } from 'src/service/Interfaces/IServiceApproval';
 import { IServiceController } from 'src/service/Interfaces/IServiceController';
+import { CreateDto } from '../dto/create/Create-Base.dto';
 
 @Controller('healthcare-service')
 @ApiTags('Healthcare service')
@@ -40,7 +41,7 @@ export class HealthcareController
 
   @Post('create-base')
   @AuthUtils([Role.Admin, Role.Client], 'access')
-  createBase(@Body() dto: CreateHealthcareServiceDto) {
+  createBase(@Body() dto: CreateDto) {
     return this.healthcareService.createBase(dto);
   }
 

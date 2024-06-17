@@ -22,4 +22,8 @@ export class CreateDto {
 
   @IsOptional()
   status?: ServiceStatus;
+
+  @IsString()
+  @IsNotEmpty()
+  serviceId: string;
 }

@@ -37,7 +37,7 @@ export class RolesGuard implements CanActivate {
       request.role = userRole;
       return matchRoles(requiredRoles, userRole);
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('wrong role');
     }
   }
 }

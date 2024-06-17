@@ -15,7 +15,7 @@ export class PetInterceptor implements NestInterceptor {
       request.body.age = parseInt(age, 10);
     }
     if (typeof weight === 'string') {
-      request.body.weight = parseFloat(weight);
+      request.body.weight = parseInt(weight);
     }
     return next.handle();
   }
